@@ -37,6 +37,10 @@ fn main() {
 
     makes_copy(x);                      // x 应该移动到函数里
 
+    let s5 = String::from("hello");
+
+    let len = calculate_length(&s5);
+    println!("s5 还活着！{}", s5);
 
 } // 这里， x会先移出作用域， 然后是s, 但是s的值已经被移走了。 所以不会有特殊操作
 
@@ -48,3 +52,8 @@ fn takes_owership(some_string: String) { // some_string 进入作用域
 fn makes_copy(some_integer: i32) { // some_integer 进入作用域
     println!("{}", some_integer);
 } // 这里， some_integer 移出作用域， 不会有特殊操作
+
+fn calculate_length(s: &String) -> usize { // s 是对 String 的引用
+    s.len()
+} // 这里，s 离开了作用域。但因为它并不拥有引用值的所有权，
+  // 所以什么也不会发生
