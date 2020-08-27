@@ -21,9 +21,16 @@ fn main () {
         area_with_struct(&rect2)
     );
 
-
     println!("rect2 is {:?}", rect2);
     println!("rect2 is {:#?}", rect2);
+    println!(
+        "The area of the rectangle is {} square pixels.",
+        rect2.area()
+    );
+
+    let sq = Rectangle::square(3) ;
+
+    println!("sq is {:?}", sq);
 }
 
 fn area(width: u32, height: u32) -> u32 {
@@ -38,6 +45,16 @@ fn area_with_truple(dimensions: (u32, u32)) -> u32 {
 struct Rectangle {
     width: u32,
     height: u32,
+}
+
+impl Rectangle {
+    fn area(&self) -> u32 {
+        self.width * self.height
+    }
+    
+    fn square(size: u32) -> Rectangle {
+        Rectangle { width: size, height: size }
+    }
 }
 
 fn area_with_struct(rectangle: &Rectangle) -> u32 {
