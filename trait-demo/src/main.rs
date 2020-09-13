@@ -50,9 +50,9 @@ pub fn notify (item: impl Summary) {
 
 // `impl Trait` 语法适用于直观的例子，不过他是一个语法糖而已。这个语法称之为 `trait bound`
 // 看起来如下
-pub fn notify<T: Summary>(item: T) {
-  println!("Breaking news! {}", item.summarize());
-}
+// pub fn notify<T: Summary>(item: T) {
+//   println!("Breaking news! {}", item.summarize());
+// }
 
 fn main() {
   let tweet = Tweet {
