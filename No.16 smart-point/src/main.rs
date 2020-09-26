@@ -16,8 +16,6 @@ fn main() {
         Rc::new(Nil)))));
     
     let b = Cons(3, Rc::clone(&a));
-    let c = Cons(4, Rc::clone(&a)); 
-
-
+    let c = Cons(4, Rc::clone(&a));
 
 }
