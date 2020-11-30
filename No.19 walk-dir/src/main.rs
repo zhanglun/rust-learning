@@ -1,7 +1,7 @@
 mod analyzer;
-use analyzer;
+use analyzer::analyze;
 
 fn main() {
     println!("Hello, world!");
-    analyzer();
+    analyze();
 }
