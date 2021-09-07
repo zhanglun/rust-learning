@@ -8,3 +8,12 @@ edition = "2018"
 
 [dependencies]
 structopt = "0.3"
+serde_json = "1.0"    # Add serde_json.
+
+[dependencies.serde]  # Add serde in its own section.
+version = "1.0"
+features = ["derive"] # We'll need the derive feature.
+
+[dependencies.chrono]
+version = "0.4"
+features = ["serde"]  # We're also going to need the serde feature for the chrono crate, so we can serialize the DateTime field.
