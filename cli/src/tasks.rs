@@ -2,9 +2,8 @@ use chrono::{serde::ts_seconds, DateTime, Local, Utc};
 use serde::Deserialize;
 use serde::Serialize;
 use std::fmt;
-use std::fs::OpenOptions;
-use std::io::Result;
-use std::io::{BufReader, Error, ErrorKind, Result, Seek, SeekFrom};
+use std::fs::{OpenOptions, File};
+use std::io::{Error, ErrorKind, Result, Seek, SeekFrom};
 use std::path::PathBuf;
 
 impl fmt::Display for Task {
@@ -42,7 +41,7 @@ fn collect_tasks(mut file: &File) -> Result<Vec<Task>> {
 }
 
 pub fn add_task(journal_path: PathBuf, task: Task) -> Result<()> {
-  let mut file = OpenOptions::new()
+  let file = OpenOptions::new()
     .read(true)
     .write(true)
     .create(true)
@@ -65,7 +64,8 @@ pub fn complete_task(journal_path: PathBuf, task_position: usize) -> Result<()> 
   if task_position == 0 || task_position > tasks.len() {
     return Err(Error::new(ErrorKind::InvalidInput, "Invalid Task ID"));
   }
-  task.remove(task_position - 1);
+
+  tasks.remove(task_position - 1);
 
   file.set_len(0)?;
   serde_json::to_writer(file, &tasks)?;
@@ -73,7 +73,7 @@ pub fn complete_task(journal_path: PathBuf, task_position: usize) -> Result<()> 
 }
 
 pub fn list_tasks(journal_path: PathBuf) -> Result<()> {
-  let file = OpenOptions::new().read(true).open(journal_file)?;
+  let file = OpenOptions::new().read(true).open(journal_path)?;
   let tasks = collect_tasks(&file)?;
 
   if tasks.is_empty() {

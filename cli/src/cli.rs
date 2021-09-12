@@ -7,7 +7,7 @@ use structopt:: StructOpt;
 pub enum Action {
   Add { 
     #[structopt()]
-    task: String,
+    text: String,
    },
   Done {
     #[structopt()]
