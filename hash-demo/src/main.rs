@@ -7,6 +7,7 @@ enum Transmission { Manual, SemiAuto, Automatic }
 #[derive(PartialEq, Debug)]
 enum Age { New, Used }
 
+use std::collections::HashMap;
 
 fn car_quality (miles: u32) -> (Age, u32) {
     if miles >0 {
@@ -47,34 +48,42 @@ fn car_factory(order: i32, miles: u32) -> Car {
 
 fn main() {
     println!("Hello, world!");
+
     let mut order = 1;
+    let mut orders: HashMap<i32, Car> = HashMap::new();
     let mut car:Car;
 
     car = car_factory(order, 1000);
-    println!("{}: {:?}, Hard top = {}, {:?}, {}, {} miles", order, car.age.0, car.roof, car.motor, car.color, car.age.1);
+    orders.insert(order, car);
+    println!("Car order {}: {:?}", order, orders.get(&order));
 
     // Car order #2: Used, Convertible
     order = order + 1;
     car = car_factory(order, 2000);
-    println!("{}: {:?}, Hard top = {}, {:?}, {}, {} miles", order, car.age.0, car.roof, car.motor, car.color, car.age.1);    
+    orders.insert(order, car);
+    println!("Car order {}: {:?}", order, orders.get(&order));
 
     // Car order #3: New, Hard top
     order = order + 1;
     car = car_factory(order, 0);
-    println!("{}: {:?}, Hard top = {}, {:?}, {}, {} miles", order, car.age.0, car.roof, car.motor, car.color, car.age.1);
+    orders.insert(order, car);
+    println!("Car order {}: {:?}", order, orders.get(&order));
 
     // Car order #4: New, Convertible
     order = order + 1;
     car = car_factory(order, 0);
-    println!("{}: {:?}, Hard top = {}, {:?}, {}, {} miles", order, car.age.0, car.roof, car.motor, car.color, car.age.1);
+    orders.insert(order, car);
+    println!("Car order {}: {:?}", order, orders.get(&order));
 
     // Car order #5: Used, Hard top
     order = order + 1;
     car = car_factory(order, 3000);
-    println!("{}: {:?}, Hard top = {}, {:?}, {}, {} miles", order, car.age.0, car.roof, car.motor, car.color, car.age.1);
+    orders.insert(order, car);
+    println!("Car order {}: {:?}", order, orders.get(&order));
 
     // Car order #6: Used, Hard top
     order = order + 1;
     car = car_factory(order, 4000);
-    println!("{}: {:?}, Hard top = {}, {:?}, {}, {} miles", order, car.age.0, car.roof, car.motor, car.color, car.age.1);
+    orders.insert(order, car);
+    println!("Car order {}: {:?}", order, orders.get(&order));
 }
