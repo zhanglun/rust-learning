@@ -19,10 +19,8 @@ fn main() -> windows::Result<()> {
         text.push_str("\n");
     }
 
-    println!("标题 你好，微软");
-
     unsafe {
-        MessageBoxA(None, "标题", "你好，微软", MB_OK);
+        MessageBoxW(None, text, "Caption", MB_OK);
     }
 
     Ok(())
