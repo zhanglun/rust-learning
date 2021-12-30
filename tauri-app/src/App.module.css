@@ -1,0 +1,16 @@
+.container {
+  display: flex;
+  height: 100%;
+  min-height: 100%;
+}
+
+.main {
+  position: relative;
+  background-color: #fafafa;
+  overflow: hidden;
+  height: 100%;
+  flex: 1;
+}
+
+.mainInner {
+}
