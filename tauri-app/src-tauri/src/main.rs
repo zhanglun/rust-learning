@@ -6,6 +6,12 @@
 use reqwest;
 use rss::Channel;
 use std::error::Error;
+use serde::{Serialize, Deserialize};
+
+#[derive(Serialize, Deserialize)]
+struct MyChannel {
+  title: String,
+}
 
 #[tauri::command]
 fn my_custom_command1() {
@@ -13,38 +19,27 @@ fn my_custom_command1() {
 }
 
 async fn request(url: &str) -> Result<String, Box<dyn Error>> {
-  let content = reqwest::get(url).await?.text().await?;
-  Ok(content.to_string())
-}
-
-#[tauri::command]
-async fn fetch_feed1(url: String) -> String {
-  let body = request(&url).await;
-  match body {
-    Ok(res) => {
-      return res.to_string();
-    }
-    Err(e) => {
-      panic!("==><>==>{:?}", e)
-    }
-  };
-}
-
-async fn request2(url: &str) -> Result<Channel, Box<dyn Error>> {
   let content = reqwest::get(url).await?.bytes().await?;
   let channel = Channel::read_from(&content[..])?;
-  Ok(channel)
+
+  let j = MyChannel {
+    title: channel.title.to_owned()
+  };
+
+  let j = serde_json::to_string(&j)?;
+
+  Ok(j)
 }
 
 #[tauri::command]
-async fn fetch_feed2(url: String) -> Result<Channel, Box<dyn Error>> {
-  let result = request2(&url).await?;
-
-  if true {
-    return Ok(result);
-  } else {
-    return Err("asdf".into());
+async fn fetch_feed(url: String) -> String {
+  let result = request(&url).await;
+  let result = match result {
+    Ok(res) => res,
+    Err(e) => e.to_string(),
   };
+
+  return result;
 }
 
 #[tauri::command]
@@ -55,8 +50,7 @@ async fn my_custom_command2(obj: String) {
 fn main() {
   tauri::Builder::default()
     .invoke_handler(tauri::generate_handler![
-      fetch_feed1,
-      fetch_feed2,
+      fetch_feed,
       my_custom_command1,
       my_custom_command2,
     ])
