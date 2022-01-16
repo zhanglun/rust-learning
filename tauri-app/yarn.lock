@@ -9180,7 +9180,7 @@ rollup@^2.43.1:
 
 rss-parser@^3.12.0:
   version "3.12.0"
-  resolved "https://registry.npm.taobao.org/rss-parser/download/rss-parser-3.12.0.tgz#b8888699ea46304a74363fbd8144671b2997984c"
+  resolved "https://registry.nlark.com/rss-parser/download/rss-parser-3.12.0.tgz#b8888699ea46304a74363fbd8144671b2997984c"
   integrity sha1-uIiGmepGMEp0Nj+9gURnGymXmEw=
   dependencies:
     entities "^2.0.3"

@@ -7,6 +7,7 @@ use reqwest;
 use rss::Channel;
 use std::error::Error;
 use serde::{Serialize, Deserialize};
+use feed_rs::parser;
 
 #[derive(Serialize, Deserialize)]
 struct MyChannel {
@@ -18,28 +19,24 @@ fn my_custom_command1() {
   println!("I was invoked from JS!");
 }
 
-async fn request(url: &str) -> Result<String, Box<dyn Error>> {
-  let content = reqwest::get(url).await?.bytes().await?;
-  let channel = Channel::read_from(&content[..])?;
+async fn request(url: &str) -> Result<feed_rs::model::Feed, Box<dyn Error>> {
+  let content = reqwest::get(url).await?.text().await?;
+  let channel = parser::parse(content.as_bytes()).unwrap();
+  // let channel = serde_json::to_string(&channel)?;
 
-  let j = MyChannel {
-    title: channel.title.to_owned()
-  };
-
-  let j = serde_json::to_string(&j)?;
-
-  Ok(j)
+  Ok(channel)
 }
 
 #[tauri::command]
 async fn fetch_feed(url: String) -> String {
-  let result = request(&url).await;
-  let result = match result {
-    Ok(res) => res,
-    Err(e) => e.to_string(),
-  };
+  // let result = request(&url).await;
+  // let result = match result {
+  //   Ok(res) => res,
+  //   Err(e) => return Err("asdf"),
+  // };
 
-  return result;
+  // result
+  return "asdf".to_string();
 }
 
 #[tauri::command]

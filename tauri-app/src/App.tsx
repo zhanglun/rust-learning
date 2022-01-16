@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
-import logo from "./logo.svg";
-import tauriCircles from "./tauri.svg";
-import tauriWord from "./wordmark.svg";
 import "./App.css";
 
 const url = "http://feed.appinn.com";
