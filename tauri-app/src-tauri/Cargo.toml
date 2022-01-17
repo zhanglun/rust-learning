@@ -20,8 +20,7 @@ serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "1.0.0-beta.8", features = ["api-all", "fs-all"] }
 reqwest = { version = "0.11", features = ["json"] }
 tokio = { version = "1", features = ["full"] }
-rss = { version="2.0", feature = ["serialization"] }
-feed-rs = { version="1.0", feature = ["serde"] }
+rss = { version="2.0", features = ["serde"] }
 
 [features]
 default = [ "custom-protocol" ]
