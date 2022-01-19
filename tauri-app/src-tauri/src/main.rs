@@ -18,9 +18,9 @@ fn my_custom_command1() {
   println!("I was invoked from JS!");
 }
 
-async fn request(url: &str) -> Result<Channel, Box<dyn Error>> {
-  let content = reqwest::get(url).await?.text().await?;
-  let channel = Channel::read_from($content[..]);
+async fn request(url: &str) -> Result<String, Box<dyn Error>> {
+  let content = reqwest::get(url).await?.bytes().await?;
+  let channel = Channel::read_from(&content[..])?;
   let channel = serde_json::to_string(&channel)?;
 
   Ok(channel)
@@ -28,9 +28,13 @@ async fn request(url: &str) -> Result<Channel, Box<dyn Error>> {
 
 #[tauri::command]
 async fn fetch_feed(url: String) -> String {
-  let result = request(&url).await;
+  let res = request(&url).await;
+  let res = match res {
+    Ok(data) => data,
+    Err(error) => error.to_string(),
+  };
   
-  result
+  res
 }
 
 #[tauri::command]
