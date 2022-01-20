@@ -21,6 +21,7 @@ tauri = { version = "1.0.0-beta.8", features = ["api-all", "fs-all"] }
 reqwest = { version = "0.11", features = ["json"] }
 tokio = { version = "1", features = ["full"] }
 rss = { version="2.0", features = ["serde"] }
+rusqlite = { version = "0.26.0", features = ["bundled"] }
 
 [features]
 default = [ "custom-protocol" ]

@@ -8,11 +8,6 @@ use rss::Channel;
 use std::error::Error;
 use serde::{Serialize, Deserialize};
 
-#[derive(Serialize, Deserialize)]
-struct MyChannel {
-  title: String,
-}
-
 #[tauri::command]
 fn my_custom_command1() {
   println!("I was invoked from JS!");
@@ -33,7 +28,7 @@ async fn fetch_feed(url: String) -> String {
     Ok(data) => data,
     Err(error) => error.to_string(),
   };
-  
+
   res
 }
 
