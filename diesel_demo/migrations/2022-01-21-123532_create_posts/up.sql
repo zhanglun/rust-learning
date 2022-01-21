@@ -1,7 +1,7 @@
 -- Your SQL goes here
-CREATE TABLE channels (
-  id VARCHAR NOT NULL PRIMARY KEY,
+CREATE TABLE posts (
+  id INTEGER NOT NULL PRIMARY KEY,
   title VARCHAR NOT NULL,
-  'description' TEXT NOT NULL,
+  body TEXT NOT NULL,
   published BOOLEAN NOT NULL DEFAULT 'f'
 )
