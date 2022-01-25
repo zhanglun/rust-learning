@@ -7,9 +7,9 @@ use opml::OPML;
 
 #[derive(Debug)]
 struct Channel {
-    title: String,
+    title: Option<String>,
     name: String,
-    url: String,
+    url: Option<String>,
 }
 
 fn main() {
@@ -19,17 +19,17 @@ fn main() {
     let context = fs::read_to_string(file).expect("!!!!");
     let document = OPML::from_str(&context).unwrap();
     let outlines = document.body.outlines;
+    let mut list: Vec<Channel> = Vec::new();
 
-    for outline in &outlines {
-        println!("======");
-        println!("{:?}", outline);
-        println!("======");
+    for outline in outlines {
         let c = Channel {
-            title: outline.title.as_ref(),
+            title: outline.title,
             name: outline.text,
-            url: outline.xml_url.unwrap(),
+            url: outline.xml_url,
         };
 
+
         println!("{:?}", c);
+        list.push(c);
     }
 }
