@@ -11,14 +11,6 @@ use dotenv::dotenv;
 use opml::OPML;
 use std::{env, fs, path};
 
-#[derive(Debug)]
-pub struct Channel {
-    title: String,
-    name: String,
-    url: String,
-    description: String,
-}
-
 pub fn establish_connection() -> SqliteConnection {
     dotenv().ok();
 
@@ -40,22 +32,22 @@ pub fn create_post<'a>(conn: &SqliteConnection, title: &'a str, body: &'a str) -
         .expect("Error saving new post")
 }
 
-pub fn parse_opml() -> Vec<Channel> {
+pub fn parse_opml() -> Vec<NewChannel> {
     let file = path::Path::new("./src/feedly.opml");
     let ctx = fs::read_to_string(file).expect("!!!!");
     let doc = OPML::from_str(&ctx).unwrap();
     let outlines = doc.body.outlines;
-    let mut list: Vec<Channel> = Vec::new();
+    let mut list: Vec<NewChannel> = Vec::new();
 
     for outline in outlines {
         match outline.xml_url {
             None => (),
             Some(url) => {
-                let c = Channel {
-                    title: outline.title.unwrap_or("".to_string()),
-                    name: outline.text,
-                    url: url,
-                    description: "".to_string(),
+                let c = NewChannel {
+                    title: outline.title.unwrap_or("".to_string()).as_str(),
+                    name: outline.text.as_str(),
+                    url: url.as_str(),
+                    description: "",
                 };
 
                 list.push(c);
@@ -70,7 +62,7 @@ pub fn create_channel<'a>(conn: &SqliteConnection, list: Vec<Channel>) {
     use schema::channels;
 
     for channel in list {
-        let new_channel = models::Channel {
+        let new_channel = models::NewChannel {
             description: "this is description",
             title: channel.title.as_str(),
             name: channel.name.as_str(),

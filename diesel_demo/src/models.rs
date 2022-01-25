@@ -16,9 +16,18 @@ pub struct NewPost<'a> {
     pub body: &'a str,
 }
 
-#[derive(Insertable, Queryable)]
+#[derive(Queryable)]
+pub struct Channel {
+    pub id: i32,
+    pub title: String,
+    pub name: String,
+    pub description: String,
+    pub url: String,
+}
+
+#[derive(Insertable)]
 #[table_name="channels"]
-pub struct Channel<'a> {
+pub struct NewChannel<'a> {
     pub title: &'a str,
     pub name: &'a str,
     pub description: &'a str,
