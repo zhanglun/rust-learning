@@ -7,7 +7,6 @@ use std::path;
 use std::collections::HashMap;
 use quick_xml::Reader;
 use quick_xml::events::Event;
-use opml::OPML;
 
 #[derive(Debug)]
 struct Channel {
