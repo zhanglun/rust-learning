@@ -32,7 +32,7 @@ pub fn create_post<'a>(conn: &SqliteConnection, title: &'a str, body: &'a str) -
         .expect("Error saving new post")
 }
 
-pub fn parse_opml() -> Vec<NewChannel> {
+pub fn parse_opml() -> Vec<models::NewChannel> {
     let file = path::Path::new("./src/feedly.opml");
     let ctx = fs::read_to_string(file).expect("!!!!");
     let doc = OPML::from_str(&ctx).unwrap();
@@ -43,11 +43,15 @@ pub fn parse_opml() -> Vec<NewChannel> {
         match outline.xml_url {
             None => (),
             Some(url) => {
-                let c = NewChannel {
-                    title: outline.title.unwrap_or("".to_string()).as_str(),
-                    name: outline.text.as_str(),
-                    url: url.as_str(),
-                    description: "",
+                let title = outline.title.unwrap_or("".to_string());
+                let feed = outline.url.unwrap_or("".to_string());
+                let name = outline.text;
+
+                let c = models::NewChannel {
+                    title,
+                    name,
+                    url: feed,
+                    description: "asdf".to_string(),
                 };
 
                 list.push(c);
@@ -58,19 +62,12 @@ pub fn parse_opml() -> Vec<NewChannel> {
     list
 }
 
-pub fn create_channel<'a>(conn: &SqliteConnection, list: Vec<Channel>) {
+pub fn create_channel(conn: &SqliteConnection, list: &Vec<NewChannel>) {
     use schema::channels;
 
     for channel in list {
-        let new_channel = models::NewChannel {
-            description: "this is description",
-            title: channel.title.as_str(),
-            name: channel.name.as_str(),
-            url: channel.url.as_str(),
-        };
-
         diesel::insert_into(channels::table)
-            .values(&new_channel)
+            .values(channel)
             .execute(conn)
             .expect("Error saving new channel");
     }

@@ -27,9 +27,9 @@ pub struct Channel {
 
 #[derive(Insertable)]
 #[table_name="channels"]
-pub struct NewChannel<'a> {
-    pub title: &'a str,
-    pub name: &'a str,
-    pub description: &'a str,
-    pub url: &'a str,
+pub struct NewChannel {
+    pub title: String,
+    pub name: String,
+    pub description: String,
+    pub url: String,
 }

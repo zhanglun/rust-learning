@@ -10,14 +10,12 @@ fn main() {
 
     let connection = establish_connection();
     let results = channels
-        .limit(5)
         .load::<Channel>(&connection)
         .expect("Error loading posts");
 
     println!("Displaying {} posts", results.len());
     for post in results {
-        println!("{}", post.title);
+        println!("{}, {}, {}", post.title, post.name, post.url);
         println!("----------\n");
-        // println!("{}", post.body);
     }
 }
