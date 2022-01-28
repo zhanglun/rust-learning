@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
+import {
+  HashRouter as Router,
+} from 'react-router-dom';
+import { ChannelList } from './components/ChannelList';
+import styles from './App.module.css';
 import "./App.css";
 
 const url = "http://feed.appinn.com";
@@ -25,13 +30,16 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <p>
-        <button onClick={() => handleClick(1)}>fetch feed</button>
-        <button onClick={() => request()}>request</button>
-      </p>
-      <p>{res}</p>
-    </div>
+        <div className={styles.container}>
+          <p>
+            <button onClick={() => handleClick(1)}>fetch feed</button>
+            <button onClick={() => request()}>request</button>
+          </p>
+          <p>{res}</p>
+          <Router>
+            <ChannelList />
+          </Router>
+        </div>
   );
 }
 
