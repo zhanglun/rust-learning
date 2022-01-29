@@ -1,6 +1,8 @@
+use serde::{Serialize, Deserialize};
 use super::schema::channels;
 
 #[derive(Queryable)]
+#[derive(Serialize, Deserialize)]
 pub struct Channel {
   pub id: i32,
   pub title: String,

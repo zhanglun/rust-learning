@@ -3,19 +3,21 @@
   windows_subsystem = "windows"
 )]
 
+extern crate app;
+extern crate diesel;
+
+use self::app::*;
+use self::models::*;
+use self::diesel::prelude::*;
+
 use reqwest;
-use rss::Channel;
+use rss::*;
 use std::error::Error;
-use serde::{Serialize, Deserialize};
 
-#[tauri::command]
-fn my_custom_command1() {
-  println!("I was invoked from JS!");
-}
-
+// use self::app::*;
 async fn request(url: &str) -> Result<String, Box<dyn Error>> {
   let content = reqwest::get(url).await?.bytes().await?;
-  let channel = Channel::read_from(&content[..])?;
+  let channel = rss::Channel::read_from(&content[..])?;
   let channel = serde_json::to_string(&channel)?;
 
   Ok(channel)
@@ -32,17 +34,34 @@ async fn fetch_feed(url: String) -> String {
   res
 }
 
+fn load_channels_from_db () -> Result<String, Box<dyn Error>> {
+  use app::schema::channels::dsl::*;
+
+  let connection = establish_connection();
+  let results = channels
+    .load::<models::Channel>(&connection)
+    .expect("Error loading posts");
+  let results = serde_json::to_string(&results)?;
+
+  Ok(results)
+}
+
 #[tauri::command]
-async fn my_custom_command2(obj: String) {
-  println!("{:?}", obj);
+fn load_channels() -> String {
+  let res = load_channels_from_db();
+  let res = match res {
+    Ok(data) => data,
+    Err(error) => error.to_string(),
+  };
+
+  res
 }
 
 fn main() {
   tauri::Builder::default()
     .invoke_handler(tauri::generate_handler![
       fetch_feed,
-      my_custom_command1,
-      my_custom_command2,
+      load_channels,
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");

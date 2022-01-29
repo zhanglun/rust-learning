@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
-import { Icon } from '../Icon';
+import React, {useState, useEffect, useCallback, useContext} from 'react';
+import {Icon} from '../Icon';
 import styles from './channel.module.css';
 import defaultSiteIcon from './default.png';
+import {invoke} from "@tauri-apps/api/tauri";
 
 const ChannelList = (): JSX.Element => {
   const [channelList, setChannelList] = useState([]);
@@ -10,10 +11,19 @@ const ChannelList = (): JSX.Element => {
   const [todayUnread, setTodayUnread] = useState(0);
 
   const initial = () => {
+    invoke(`load_channels`).then((res) => {
+      if (typeof res === "string") {
+        setChannelList(JSON.parse(res));
+      } else {
+        setChannelList([]);
+      }
+    })
   };
 
-  const refreshList = () => {};
-  const viewArticles = (article: any) => {};
+  const refreshList = () => {
+  };
+  const viewArticles = (article: any) => {
+  };
 
   const viewInbox = () => {
   };
@@ -26,42 +36,42 @@ const ChannelList = (): JSX.Element => {
 
   const renderFeedList = (): JSX.Element => {
     return (
-        <ul className={styles.list}>
-          {channelList.map(
-              (channel: any, i: number) => {
-                const {articleCount = 0} = channel;
+      <ul className={styles.list}>
+        {channelList.map(
+          (channel: any, i: number) => {
+            const {articleCount = 0} = channel;
 
-                return (
-                    <li
-                        className={`${styles.item} ${
-                            currentId === channel.id ? styles.itemActive : ''
-                        }`}
-                        // eslint-disable-next-line react/no-array-index-key
-                        key={channel.title + i}
-                        onClick={() => viewArticles(channel)}
-                        aria-hidden="true"
-                    >
-                      <img
-                          src={channel.favicon}
-                          onError={(e) => {
-                            // @ts-ignore
-                            e.target.onerror = null;
+            return (
+              <li
+                className={`${styles.item} ${
+                  currentId === channel.id ? styles.itemActive : ''
+                }`}
+                // eslint-disable-next-line react/no-array-index-key
+                key={channel.title + i}
+                onClick={() => viewArticles(channel)}
+                aria-hidden="true"
+              >
+                <img
+                  src={channel.favicon}
+                  onError={(e) => {
+                    // @ts-ignore
+                    e.target.onerror = null;
 
-                            // @ts-ignore
-                            e.target.src = defaultSiteIcon;
-                          }}
-                          className={styles.icon}
-                          alt={channel.title}
-                      />
-                      <span className={styles.name}>{channel.title}</span>
-                      {articleCount > 0 && (
-                          <span className={styles.count}>{articleCount}</span>
-                      )}
-                    </li>
-                );
-              }
-          )}
-        </ul>
+                    // @ts-ignore
+                    e.target.src = defaultSiteIcon;
+                  }}
+                  className={styles.icon}
+                  alt={channel.title}
+                />
+                <span className={styles.name}>{channel.title}</span>
+                {articleCount > 0 && (
+                  <span className={styles.count}>{articleCount}</span>
+                )}
+              </li>
+            );
+          }
+        )}
+      </ul>
     );
   };
 
@@ -73,8 +83,8 @@ const ChannelList = (): JSX.Element => {
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.toolbar}>
-          <Icon name="add" customClass={styles.toolbarItem} />
-          <Icon name="folder" customClass={styles.toolbarItem} />
+          <Icon name="add" customClass={styles.toolbarItem}/>
+          <Icon name="folder" customClass={styles.toolbarItem}/>
           <Icon
             name="refresh"
             customClass={styles.toolbarItem}
@@ -121,4 +131,4 @@ const ChannelList = (): JSX.Element => {
   );
 };
 
-export { ChannelList };
+export {ChannelList};
