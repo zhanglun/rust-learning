@@ -1,61 +1,62 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {invoke} from "@tauri-apps/api/tauri";
 import {
-  HashRouter as Router,
+  BrowserRouter,
+  Routes,
+  Route,
 } from 'react-router-dom';
 import {ChannelList} from './components/ChannelList';
 import {ArticleList} from './components/ArticleList';
 import styles from './App.module.css';
+import "./styles/index.global.css";
 import "./App.css";
 
-const url = "http://feed.appinn.com";
+function useQuery() {
+  return new URLSearchParams(window.location.search);
+}
+
+enum RouteConfig {
+  HOME = '/',
+  SETTINGS = '/settings',
+  ALL = '/all',
+  TODAY = '/today',
+  FAVORITE = '/favorite',
+  CHANNEL = '/channels/:name',
+  ARTICLE = '/channels/:name/articles/:id',
+}
 
 function App() {
-  const [res, setRes] = useState<any>("");
+  const query = useQuery();
 
-  const handleArticleSelect = useCallback((article: any) => {
-  }, []);
+  console.log('query', query);
 
-  const handleClick = async (n: number) => {
-    const a = await invoke(`fetch_feed`, {url});
-    console.log("a===<", a);
-    setRes(a);
-  };
-
-  const request = () => {
-    fetch(url)
-      .then((res) => res.text())
-      .then((res) => {
-        setRes(res);
-      })
-      .catch((err) => {
-        setRes(err.message);
-      });
-  };
+  const
+    handleArticleSelect = useCallback((article: any) => {
+    }, []);
 
   return (
     <div className={styles.container}>
-      <p>
-        <button onClick={() => handleClick(1)}>fetch feed</button>
-        <button onClick={() => request()}>request</button>
-      </p>
-      <p>{res}</p>
-      <Router>
-        <ChannelList/>
-        <div className={styles.main} id="appMain">
-          <div className={styles.article}>
-            {/* <GlobalToolbar /> */}
-            <div className={styles.mainView}>
-              <ArticleList
-                title={"asdfasdfsadf"}
-                channelId={"asdf"}
-                onArticleSelect={handleArticleSelect}
-              />
-              {/*<ArticleView article={current} />*/}
+      <ChannelList/>
+      <BrowserRouter>
+        <Routes>
+          <Route path={RouteConfig.CHANNEL} element={
+            <div className={styles.main} id="appMain">
+              <div className={styles.article}>
+                {/* <GlobalToolbar /> */}
+                <div className={styles.mainView}>
+                  <ArticleList
+                    title={"asdfasdfsadf"}
+                    channelId={"asdf"}
+                    onArticleSelect={handleArticleSelect}
+                  />
+                  {/*<ArticleView article={current} />*/}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </Router>
+          }>
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

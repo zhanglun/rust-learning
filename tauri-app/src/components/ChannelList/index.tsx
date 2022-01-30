@@ -22,7 +22,8 @@ const ChannelList = (): JSX.Element => {
 
   const refreshList = () => {
   };
-  const viewArticles = (article: any) => {
+  const viewArticles = async (channel: any) => {
+    console.log(channel);
   };
 
   const viewInbox = () => {

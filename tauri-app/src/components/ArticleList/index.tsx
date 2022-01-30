@@ -2,11 +2,11 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, {
   useCallback,
-  useContext,
   useEffect,
   useRef,
   useState,
 } from 'react';
+import {invoke} from "@tauri-apps/api/tauri";
 // @ts-ignores
 import { Dropdown } from '@douyinfe/semi-ui';
 import { Icon } from '../Icon';
@@ -61,8 +61,13 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
     });
   }, [articleList]);
 
-  const initial = () => {
-
+  const initial = async () => {
+    // await invoke('fetch_feed', {url: channel.url}).then((res) => {
+    //   if (typeof res === "string") {
+    //     console.log(JSON.parse(res));
+    //     // const { items } = res;
+    //   }
+    // });
   };
 
   /**

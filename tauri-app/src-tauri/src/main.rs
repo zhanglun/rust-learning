@@ -14,18 +14,9 @@ use reqwest;
 use rss::*;
 use std::error::Error;
 
-// use self::app::*;
-async fn request(url: &str) -> Result<String, Box<dyn Error>> {
-  let content = reqwest::get(url).await?.bytes().await?;
-  let channel = rss::Channel::read_from(&content[..])?;
-  let channel = serde_json::to_string(&channel)?;
-
-  Ok(channel)
-}
-
 #[tauri::command]
 async fn fetch_feed(url: String) -> String {
-  let res = request(&url).await;
+  let res = fetch_rss_item(&url).await;
   let res = match res {
     Ok(data) => data,
     Err(error) => error.to_string(),
