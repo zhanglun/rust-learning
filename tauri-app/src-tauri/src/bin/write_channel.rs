@@ -11,9 +11,3 @@ fn main() {
 
     println!("Channels inserted!");
 }
-
-#[cfg(not(windows))]
-const EOF: &'static str = "CTRL+D";
-
-#[cfg(windows)]
-const EOF: &'static str = "CTRL+Z";

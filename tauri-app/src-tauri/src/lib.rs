@@ -32,15 +32,15 @@ pub fn parse_opml() -> Vec<models::NewChannel> {
   for outline in outlines {
     match outline.xml_url {
       None => (),
-      Some(url) => {
-        let title = outline.title.unwrap_or("".to_string());
-        let feed = url;
-        let name = outline.text;
+      Some(xml_url) => {
+        // let title = outline.title.unwrap_or("".to_string());
+        let link = outline.html_url.unwrap_or("".to_string());
+        let title = outline.text;
 
         let c = models::NewChannel {
           title,
-          name,
-          url: feed,
+          link,
+          feed_url: xml_url,
           description: "asdf".to_string(),
         };
 
@@ -56,6 +56,8 @@ pub fn create_channel(conn: &SqliteConnection, list: &Vec<NewChannel>) {
   use schema::channels;
 
   for channel in list {
+    println!("{:?}", &channel);
+
     diesel::insert_into(channels::table)
       .values(channel)
       .execute(conn)

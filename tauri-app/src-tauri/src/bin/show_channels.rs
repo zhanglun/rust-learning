@@ -15,7 +15,7 @@ fn main() {
 
     println!("Displaying {} posts", results.len());
     for post in results {
-        println!("{}, {}, {}", post.title, post.name, post.url);
+        println!("{}, {}, {}", post.title, post.feed_url, post.link);
         println!("----------\n");
     }
 }
