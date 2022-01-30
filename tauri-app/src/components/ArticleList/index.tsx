@@ -23,7 +23,7 @@ type ListFilter = {
 
 type ArticleListProps = {
   channelId: string | null;
-  title: string;
+  title: string | null;
   onArticleSelect: (article: any) => void;
 };
 

@@ -3,8 +3,11 @@ import {Icon} from '../Icon';
 import styles from './channel.module.css';
 import defaultSiteIcon from './default.png';
 import {invoke} from "@tauri-apps/api/tauri";
+import {useNavigate} from "react-router-dom";
+import {RouteConfig} from "../../config";
 
 const ChannelList = (): JSX.Element => {
+  let navigate = useNavigate()
   const [channelList, setChannelList] = useState([]);
   const [currentId, setCurrentId] = useState('');
   const [sum, setSum] = useState(0);
@@ -24,6 +27,11 @@ const ChannelList = (): JSX.Element => {
   };
   const viewArticles = async (channel: any) => {
     console.log(channel);
+    navigate(
+      `${RouteConfig.CHANNEL.replace(/:name/, channel.title)}?channelId=${
+        channel.id
+      }`
+    );
   };
 
   const viewInbox = () => {
