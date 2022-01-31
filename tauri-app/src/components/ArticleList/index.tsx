@@ -23,12 +23,13 @@ type ListFilter = {
 
 type ArticleListProps = {
   channelId: string | null;
+  feedUrl: string| null;
   title: string | null;
   onArticleSelect: (article: any) => void;
 };
 
 export const ArticleList = (props: ArticleListProps): JSX.Element => {
-  const { channelId, title } = props;
+  const { channelId, feedUrl, title } = props;
   const [loading, setLoading] = useState(true);
   const [articleList, setArticleList] = useState<any[]>([]);
   const articleListRef = useRef<HTMLDivElement>(null);
@@ -49,7 +50,9 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
     }
   };
 
-  const renderList = useCallback((): JSX.Element[] => {
+
+  const renderList = (): JSX.Element[] => {
+    console.log('--->', articleList);
     return articleList.map((article: any) => {
       return (
         <ArticleItem
@@ -59,16 +62,15 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
         />
       );
     });
-  }, [articleList]);
+  };
 
   const initial = async () => {
-    console.log('===>');
-    // await invoke('fetch_feed', {url: channel.url}).then((res) => {
-    //   if (typeof res === "string") {
-    //     console.log(JSON.parse(res));
-    //     // const { items } = res;
-    //   }
-    // });
+    const res = await invoke('test', { url: feedUrl });
+    if (typeof res === "string") {
+      setArticleList(JSON.parse(res));
+    } else {
+      setArticleList([]);
+    }
   };
 
   /**

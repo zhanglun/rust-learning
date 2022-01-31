@@ -20,7 +20,7 @@ const ChannelList = (): JSX.Element => {
       } else {
         setChannelList([]);
       }
-    })
+    });
   };
 
   const refreshList = () => {
@@ -31,8 +31,9 @@ const ChannelList = (): JSX.Element => {
     navigate(
       `${RouteConfig.CHANNEL.replace(/:name/, channel.title)}?channelId=${
         channel.id
-      }`
+      }&feedUrl=${channel.feed_url}`
     );
+
   };
 
   const viewInbox = () => {

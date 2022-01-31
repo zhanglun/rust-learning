@@ -45,11 +45,23 @@ fn load_channels() -> String {
   res
 }
 
+#[tauri::command]
+async fn test(url: String) -> String {
+  let res = fetch_rss_item(&url).await;
+  let res = match res {
+    Ok(data) => data,
+    Err(error) => error.to_string(),
+  };
+
+  res
+}
+
 fn main() {
   tauri::Builder::default()
     .invoke_handler(tauri::generate_handler![
       fetch_feed,
       load_channels,
+      test,
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri Application");

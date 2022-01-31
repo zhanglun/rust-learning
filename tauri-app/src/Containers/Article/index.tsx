@@ -26,6 +26,7 @@ export const ArticleContainer = (): JSX.Element => {
         <ArticleList
           title={params.name}
           channelId={query.get('channelId')}
+          feedUrl={query.get('feedUrl')}
           onArticleSelect={handleArticleSelect}
         />
         {/*<Article article={current} />*/}

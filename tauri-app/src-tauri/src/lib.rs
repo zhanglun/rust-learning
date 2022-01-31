@@ -66,7 +66,7 @@ pub fn create_channel(conn: &SqliteConnection, list: &Vec<NewChannel>) {
 pub async fn fetch_rss_item(url: &str) -> Result<String, Box<dyn Error>> {
   let content = reqwest::get(url).await?.bytes().await?;
   let channel = rss::Channel::read_from(&content[..])?;
-  let channel = serde_json::to_string(&channel)?;
+  let items = serde_json::to_string(&channel.items)?;
 
-  Ok(channel)
+  Ok(items)
 }
