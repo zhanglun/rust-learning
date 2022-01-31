@@ -56,9 +56,7 @@ pub fn create_channel(conn: &SqliteConnection, list: &Vec<NewChannel>) {
   use schema::channels;
 
   for channel in list {
-    println!("{:?}", &channel);
-
-    diesel::insert_into(channels::table)
+    diesel::insert_or_ignore_into(channels::table)
       .values(channel)
       .execute(conn)
       .expect("Error saving new channel");

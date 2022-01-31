@@ -62,6 +62,7 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
   }, [articleList]);
 
   const initial = async () => {
+    console.log('===>');
     // await invoke('fetch_feed', {url: channel.url}).then((res) => {
     //   if (typeof res === "string") {
     //     console.log(JSON.parse(res));
@@ -105,7 +106,7 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
     resetScrollTop();
 
     initial()
-  }, []);
+  }, [channelId]);
 
   return (
     <div className={styles.container} ref={articleListRef}>

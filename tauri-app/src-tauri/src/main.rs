@@ -7,11 +7,8 @@ extern crate app;
 extern crate diesel;
 
 use self::app::*;
-use self::models::*;
 use self::diesel::prelude::*;
 
-use reqwest;
-use rss::*;
 use std::error::Error;
 
 #[tauri::command]
@@ -55,5 +52,5 @@ fn main() {
       load_channels,
     ])
     .run(tauri::generate_context!())
-    .expect("error while running tauri application");
+    .expect("error while running tauri Application");
 }

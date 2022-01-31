@@ -7,7 +7,7 @@ import {useNavigate} from "react-router-dom";
 import {RouteConfig} from "../../config";
 
 const ChannelList = (): JSX.Element => {
-  let navigate = useNavigate()
+  const navigate = useNavigate();
   const [channelList, setChannelList] = useState([]);
   const [currentId, setCurrentId] = useState('');
   const [sum, setSum] = useState(0);
@@ -25,6 +25,7 @@ const ChannelList = (): JSX.Element => {
 
   const refreshList = () => {
   };
+
   const viewArticles = async (channel: any) => {
     console.log(channel);
     navigate(
