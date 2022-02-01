@@ -27,7 +27,6 @@ const ChannelList = (): JSX.Element => {
   };
 
   const viewArticles = async (channel: any) => {
-    console.log(channel);
     navigate(
       `${RouteConfig.CHANNEL.replace(/:name/, channel.title)}?channelId=${
         channel.id

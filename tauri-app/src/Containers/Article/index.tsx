@@ -1,9 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { ArticleList } from '../../components/ArticleList';
-// import { Article } from '../../components/Article';
+import { ArticleView } from '../../components/ArticleView';
 import styles from './index.module.css';
-// import { Article } from '../../../infra/types';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -29,7 +28,7 @@ export const ArticleContainer = (): JSX.Element => {
           feedUrl={query.get('feedUrl')}
           onArticleSelect={handleArticleSelect}
         />
-        {/*<Article article={current} />*/}
+        <ArticleView article={current} />
       </div>
     </div>
   );

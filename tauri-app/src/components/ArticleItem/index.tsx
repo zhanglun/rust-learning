@@ -25,6 +25,10 @@ export const ArticleItem = (props: any) => {
   const markAsRead = () => {};
 
   const handleClick = (e: any) => {
+    if(onSelect) {
+      console.log('---> onSelect');
+      onSelect(article);
+    }
   };
 
   const parseBannerImage = (content: string): string => {

@@ -28,7 +28,7 @@ fn load_channels_from_db () -> Result<String, Box<dyn Error>> {
   let connection = establish_connection();
   let results = channels
     .load::<models::Channel>(&connection)
-    .expect("Error loading posts");
+    .expect("Error loading channels");
   let results = serde_json::to_string(&results)?;
 
   Ok(results)
@@ -46,7 +46,7 @@ fn load_channels() -> String {
 }
 
 #[tauri::command]
-async fn test(url: String) -> String {
+async fn load_articles(url: String) -> String {
   let res = fetch_rss_item(&url).await;
   let res = match res {
     Ok(data) => data,
@@ -61,7 +61,7 @@ fn main() {
     .invoke_handler(tauri::generate_handler![
       fetch_feed,
       load_channels,
-      test,
+      load_articles,
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri Application");

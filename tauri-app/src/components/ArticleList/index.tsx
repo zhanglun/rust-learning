@@ -45,6 +45,7 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
   };
 
   const handleArticleSelect = (article: any) => {
+    console.log('handleArticleSelect');
     if (props.onArticleSelect) {
       props.onArticleSelect(article);
     }
@@ -52,12 +53,11 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
 
 
   const renderList = (): JSX.Element[] => {
-    console.log('--->', articleList);
-    return articleList.map((article: any) => {
+    return articleList.map((article: any, idx: number) => {
       return (
         <ArticleItem
           article={article}
-          key={article.id}
+          key={idx}
           onSelect={handleArticleSelect}
         />
       );
@@ -65,12 +65,16 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
   };
 
   const initial = async () => {
-    const res = await invoke('test', { url: feedUrl });
+    setLoading(true);
+
+    const res = await invoke('load_articles', { url: feedUrl });
+
     if (typeof res === "string") {
       setArticleList(JSON.parse(res));
     } else {
       setArticleList([]);
     }
+    setLoading(false);
   };
 
   /**
