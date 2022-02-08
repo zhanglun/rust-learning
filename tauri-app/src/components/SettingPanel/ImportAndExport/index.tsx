@@ -1,12 +1,11 @@
 import React, {useCallback, useRef, useState} from 'react';
 import styles from '../settingpanel.module.css';
-
-type ImportItem = { title: string; feedUrl: string };
+import {db, Channel as ChannelModel} from '../../../db';
 
 export const ImportAndExport = (props: any) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File>();
-  const [importedList, setImportedList] = useState<ImportItem[]>([]);
+  const [importedList, setImportedList] = useState<ChannelModel[]>([]);
 
   const uploadOPMLFile = () => {
     if (fileInputRef && fileInputRef.current) {
@@ -14,10 +13,7 @@ export const ImportAndExport = (props: any) => {
     }
   };
 
-  const parserOPML = useCallback((source: string): {
-    title: string;
-    feedUrl: string;
-  }[] => {
+  const parserOPML = (source: string): ChannelModel[] => {
     const parser = new DOMParser();
     const resultDOM = parser.parseFromString(source, 'application/xml');
     const $outlines = resultDOM.querySelectorAll('outline[xmlUrl]');
@@ -26,15 +22,18 @@ export const ImportAndExport = (props: any) => {
       .map(($item: Element) => {
         return {
           title: $item.getAttribute('title') || '',
+          link: $item.getAttribute('htmlUrl') || '',
           feedUrl: $item.getAttribute('xmlUrl') || '',
         };
       })
-      .filter((item) => item.title && item.feedUrl);
-  }, []);
+      .filter((item) => item.title && item.feedUrl && item.link);
+  };
 
   const importFromOPML = () => {
     console.log(importedList);
-    // TODO: save to indexDB;
+    db.channels.bulkAdd(importedList).then((lastkey) => {
+      console.log('lastKey: ', lastkey);
+    });
   };
 
   const handleFileChange = (e: any) => {
@@ -44,7 +43,7 @@ export const ImportAndExport = (props: any) => {
 
     reader.onload = () => {
       const xmlString = reader.result as string;
-      const list: ImportItem[] = parserOPML(xmlString);
+      const list = parserOPML(xmlString);
 
       setImportedList(list);
     };

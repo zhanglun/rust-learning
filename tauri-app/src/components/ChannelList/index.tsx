@@ -1,14 +1,19 @@
 import React, {useState, useEffect, useCallback, useContext} from 'react';
+import { useLiveQuery } from 'dexie-react-hooks';
 import {Icon} from '../Icon';
 import styles from './channel.module.css';
 import defaultSiteIcon from './default.png';
 import {invoke} from "@tauri-apps/api/tauri";
 import {useNavigate} from "react-router-dom";
 import {RouteConfig} from "../../config";
+import { db } from '../../db';
 
 const ChannelList = (): JSX.Element => {
+  const channelList = useLiveQuery(
+    () => db.channels.toArray()
+  );
   const navigate = useNavigate();
-  const [channelList, setChannelList] = useState([]);
+  // const [channelList, setChannelList] = useState([]);
   const [currentId, setCurrentId] = useState('');
   const [sum, setSum] = useState(0);
   const [todayUnread, setTodayUnread] = useState(0);
@@ -47,10 +52,11 @@ const ChannelList = (): JSX.Element => {
   const renderFeedList = (): JSX.Element => {
     return (
       <ul className={styles.list}>
-        {channelList.map(
+        {channelList?.map(
           (channel: any, i: number) => {
-            const {articleCount = 0, url} = channel;
-            const ico = "https://icons.duckduckgo.com/ip3/" + url + ".ico";
+            const {articleCount = 0, link} = channel;
+            const hostname = link ? new URL(link).hostname : ''
+            const ico = "https://icons.duckduckgo.com/ip3/" + hostname + ".ico";
 
             return (
               <li

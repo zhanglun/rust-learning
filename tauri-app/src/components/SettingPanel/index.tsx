@@ -12,12 +12,12 @@ function SettingPanel() {
       <MainHeader title="设置" />
       <div className={styles.panelContainer}>
         <Tabs type="line">
-          <TabPane tab="订阅管理" itemKey="1">
-            {/*<ChannelManagement />*/}
-          </TabPane>
           <TabPane tab="导入/导出" itemKey="2">
             <SettingSubscribe />
             <ImportAndExport />
+          </TabPane>
+          <TabPane tab="订阅管理" itemKey="1">
+            {/*<ChannelManagement />*/}
           </TabPane>
         </Tabs>
       </div>
