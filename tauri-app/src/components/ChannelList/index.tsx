@@ -14,13 +14,13 @@ const ChannelList = (): JSX.Element => {
   const [todayUnread, setTodayUnread] = useState(0);
 
   const initial = () => {
-    invoke(`load_channels`).then((res) => {
-      if (typeof res === "string") {
-        setChannelList(JSON.parse(res));
-      } else {
-        setChannelList([]);
-      }
-    });
+    // invoke(`load_channels`).then((res) => {
+    //   if (typeof res === "string") {
+    //     setChannelList(JSON.parse(res));
+    //   } else {
+    //     setChannelList([]);
+    //   }
+    // });
   };
 
   const refreshList = () => {
@@ -32,13 +32,13 @@ const ChannelList = (): JSX.Element => {
         channel.id
       }&feedUrl=${channel.feed_url}`
     );
-
   };
 
   const viewInbox = () => {
   };
 
   const goToSetting = () => {
+    navigate(RouteConfig.SETTINGS);
   };
 
   const viewToday = () => {
@@ -49,7 +49,8 @@ const ChannelList = (): JSX.Element => {
       <ul className={styles.list}>
         {channelList.map(
           (channel: any, i: number) => {
-            const {articleCount = 0} = channel;
+            const {articleCount = 0, url} = channel;
+            const ico = "https://icons.duckduckgo.com/ip3/" + url + ".ico";
 
             return (
               <li
@@ -62,7 +63,7 @@ const ChannelList = (): JSX.Element => {
                 aria-hidden="true"
               >
                 <img
-                  src={channel.favicon}
+                  src={ico}
                   onError={(e) => {
                     // @ts-ignore
                     e.target.onerror = null;

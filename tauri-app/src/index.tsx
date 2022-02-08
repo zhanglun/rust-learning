@@ -5,7 +5,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {RouteConfig} from "./config";
-import {ArticleContainer} from "./Containers/Article";
+import {ArticleContainer} from "./containers/Article";
+import {SettingContainer} from "./containers/Setting";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -14,6 +15,8 @@ ReactDOM.render(
         <Route path={"/"} element={<App/>}>
           <Route path={RouteConfig.CHANNEL} element={<ArticleContainer/>}>
           </Route>
+        </Route>
+        <Route path={RouteConfig.SETTINGS} element={<SettingContainer/>}>
         </Route>
       </Routes>
     </BrowserRouter>
