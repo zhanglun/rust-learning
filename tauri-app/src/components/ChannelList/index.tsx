@@ -13,7 +13,6 @@ const ChannelList = (): JSX.Element => {
     () => db.channels.toArray()
   );
   const navigate = useNavigate();
-  // const [channelList, setChannelList] = useState([]);
   const [currentId, setCurrentId] = useState('');
   const [sum, setSum] = useState(0);
   const [todayUnread, setTodayUnread] = useState(0);
@@ -37,6 +36,10 @@ const ChannelList = (): JSX.Element => {
         channel.id
       }&feedUrl=${channel.feed_url}`
     );
+
+    invoke("fetch_feed", { url: channel.feed_url}).then((res) => {
+      console.log(res);
+    });
   };
 
   const viewInbox = () => {
