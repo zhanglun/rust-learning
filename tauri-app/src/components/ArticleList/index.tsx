@@ -55,7 +55,6 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
     }
   };
 
-
   const renderList = (): JSX.Element[] => {
     return articleList.map((article: any, idx: number) => {
       return (

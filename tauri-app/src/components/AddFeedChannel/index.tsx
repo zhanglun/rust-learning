@@ -141,8 +141,12 @@ export const AddFeedChannel = (props: any) => {
   };
 
   const handleSave = () => {
-    db.channels.add(channel);
-    db.articles.bulkAdd(articles);
+    db.transaction('rw', db.channels, db.articles, async () => {
+      db.channels.add(channel);
+      db.articles.bulkAdd(articles);
+    }).then(() => {
+      toggleModal();
+    })
   };
 
   return (

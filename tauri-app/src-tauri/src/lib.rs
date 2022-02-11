@@ -1,8 +1,3 @@
-#[macro_use]
-extern crate diesel;
-extern crate dotenv;
-
-use opml::OPML;
 use std::error::Error;
 
 pub async fn fetch_rss_item(url: &str) -> Result<String, Box<dyn Error>> {

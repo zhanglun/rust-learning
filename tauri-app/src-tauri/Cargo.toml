@@ -19,11 +19,7 @@ serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "1.0.0-beta.8", features = ["api-all", "fs-all"] }
 reqwest = { version = "0.11", features = ["json"] }
-tokio = { version = "1", features = ["full"] }
 rss = { version="2.0", features = ["serde"] }
-diesel = { version = "^1.1.0", features = ["sqlite"] }
-dotenv = "0.9.0"
-opml = "*"
 
 [features]
 default = [ "custom-protocol" ]

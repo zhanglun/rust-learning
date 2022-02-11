@@ -52,13 +52,12 @@ pub fn get_menu() -> Menu {
     .add_submenu(Submenu::new("Edit", edit_menu))
 }
 
-
-
 fn main() {
   tauri::Builder::default()
+    .menu(get_menu())
     .invoke_handler(tauri::generate_handler![
       fetch_feed,
     ])
     .run(tauri::generate_context!())
-    .expect("error while running tauri Application");
+    .expect("error while running tauri  Application");
 }

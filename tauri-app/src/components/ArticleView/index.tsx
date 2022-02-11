@@ -118,7 +118,7 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
 
   useEffect(() => {
     resetScrollTop();
-    setPageContent(article.content);
+    article && setPageContent(article.content);
   }, [article]);
 
   return (
