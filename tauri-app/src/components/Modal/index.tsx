@@ -8,40 +8,19 @@ type ModalProps = {
   children?: any;
 };
 
-const backdropStyles = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  width: "100%",
-  height: "100%",
-  zIndex: 10,
-  transform: "translateZ(0)",
-  backgroundColor: "rgba(0, 0, 0, 0.3)",
-};
-
-const modalStyles = {
-  position: "fixed",
-  padding: "2.5rem 1.5rem 1.5rem 1.5rem",
-  backgroundColor: "white",
-  boxShadow: "0 0 10px 3px rgba(0, 0, 0, 0.1)",
-  overflowY: "auto",
-  left: "50%",
-  top: "50%",
-  height: "auto",
-  transform: "translate(-50%, -50%)",
-  maxWidth: "30em",
-  borderRadius: "0.25rem",
-  maxHeight: "calc(100% - 1em)",
-};
-
 const Modal = (props: ModalProps) => {
-  return props.visible
+  const { visible, title, children } = props;
+
+  return visible
     ? ReactDOM.createPortal(
         //@ts-ignore
-        <div style={backdropStyles}>
+        <div className="modal-overlay">
           {/* @ts-ignore */}
-          <div className="modal" style={{ ...modalStyles }}>
-            {props.children}
+          <div className="modal">
+            <div className="modal-header">
+              { title ? <div className="modal-title">{title}</div> : null}
+            </div>
+            {children}
           </div>
         </div>,
         document.body
