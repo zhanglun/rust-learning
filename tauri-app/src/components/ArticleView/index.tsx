@@ -118,31 +118,7 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
 
   useEffect(() => {
     resetScrollTop();
-    setLoading(true);
-
-    if (article) {
-      Mercury.parse(article.link)
-        .then((page: any) => {
-          console.log(page);
-
-          // 有时候page.content没有文本内容，此时需要用article.content代替；
-          const content =
-            page.content.replace(/<[^>]+>/g, '').trim().length >
-            article.content.length
-              ? page.content
-              : article.content;
-          setPageContent(content);
-
-          console.log(article.content);
-          setLoading(false);
-
-          return page;
-        })
-        .catch(() => {
-          setPageContent(article.content);
-          setLoading(false);
-        });
-    }
+    setPageContent(article.content);
   }, [article]);
 
   return (

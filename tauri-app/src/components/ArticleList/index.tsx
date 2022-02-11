@@ -1,17 +1,17 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, {
-  useCallback,
   useEffect,
   useRef,
   useState,
 } from 'react';
-import {invoke} from "@tauri-apps/api/tauri";
+import { useLiveQuery } from 'dexie-react-hooks';
 // @ts-ignores
 import { Dropdown } from '@douyinfe/semi-ui';
 import { Icon } from '../Icon';
 import { ArticleItem } from '../ArticleItem';
 import { Loading } from '../Loading';
+import { db } from '../../db';
 
 import styles from './articlelist.module.css';
 
@@ -30,8 +30,12 @@ type ArticleListProps = {
 
 export const ArticleList = (props: ArticleListProps): JSX.Element => {
   const { channelId, feedUrl, title } = props;
-  const [loading, setLoading] = useState(true);
-  const [articleList, setArticleList] = useState<any[]>([]);
+  const articleList = useLiveQuery(
+    () => db.articles.where("feedUrl").equalsIgnoreCase(feedUrl as string).toArray(),
+    [feedUrl]
+  ) || [];
+
+  const [loading, setLoading] = useState(false);
   const articleListRef = useRef<HTMLDivElement>(null);
   const [listFilter, setListFilter] = useState<ListFilter>({
     unread: true,
@@ -62,19 +66,6 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
         />
       );
     });
-  };
-
-  const initial = async () => {
-    setLoading(true);
-
-    const res = await invoke('load_articles', { url: feedUrl });
-
-    if (typeof res === "string") {
-      setArticleList(JSON.parse(res));
-    } else {
-      setArticleList([]);
-    }
-    setLoading(false);
   };
 
   /**
@@ -110,8 +101,6 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
 
   useEffect(() => {
     resetScrollTop();
-
-    initial()
   }, [channelId]);
 
   return (

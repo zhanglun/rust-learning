@@ -1,30 +1,26 @@
-import React, {useState, useEffect, useCallback, useContext} from 'react';
+import React, {useState, useEffect, useRef } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import {Icon} from '../Icon';
 import styles from './channel.module.css';
 import defaultSiteIcon from './default.png';
-import {invoke} from "@tauri-apps/api/tauri";
 import {useNavigate} from "react-router-dom";
 import {RouteConfig} from "../../config";
 import { db } from '../../db';
+import { AddFeedChannel } from '../AddFeedChannel';
 
 const ChannelList = (): JSX.Element => {
   const channelList = useLiveQuery(
-    () => db.channels.toArray()
+    () => db.channels.toArray(),
+    []
   );
+
   const navigate = useNavigate();
+  const addFeedButtonRef = useRef(null);
   const [currentId, setCurrentId] = useState('');
   const [sum, setSum] = useState(0);
   const [todayUnread, setTodayUnread] = useState(0);
 
   const initial = () => {
-    // invoke(`load_channels`).then((res) => {
-    //   if (typeof res === "string") {
-    //     setChannelList(JSON.parse(res));
-    //   } else {
-    //     setChannelList([]);
-    //   }
-    // });
   };
 
   const refreshList = () => {
@@ -34,12 +30,8 @@ const ChannelList = (): JSX.Element => {
     navigate(
       `${RouteConfig.CHANNEL.replace(/:name/, channel.title)}?channelId=${
         channel.id
-      }&feedUrl=${channel.feed_url}`
+      }&feedUrl=${channel.feedUrl}`
     );
-
-    invoke("fetch_feed", { url: channel.feed_url}).then((res) => {
-      console.log(res);
-    });
   };
 
   const viewInbox = () => {
@@ -95,15 +87,23 @@ const ChannelList = (): JSX.Element => {
     );
   };
 
+  const addFeed = () => {
+    if (addFeedButtonRef && addFeedButtonRef.current) {
+      (addFeedButtonRef.current as any).showModal();
+    }
+  };
+
   useEffect(() => {
     initial();
   }, []);
+
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.toolbar}>
-          <Icon name="add" customClass={styles.toolbarItem}/>
+          <AddFeedChannel Aref={addFeedButtonRef}/>
+          <Icon name="add" customClass={styles.toolbarItem} onClick={addFeed}/>
           <Icon name="folder" customClass={styles.toolbarItem}/>
           <Icon
             name="refresh"

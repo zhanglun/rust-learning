@@ -8,14 +8,25 @@ export interface Channel {
   description?: string;
   pubDate?: Date;
 }
+export interface Article {
+  id?: number;
+  title: string;
+  link: string;
+  feedUrl: string;
+  description?: string;
+  content?: string;
+  pudDate?: Date;
+}
 
 export class MySubClassedDexie extends Dexie {
   channels!: Table<Channel>;
+  articles!: Table<Article>;
 
   constructor() {
     super('salix');
     this.version(1).stores({
-      channels: '++id, title, link, feedUrl, description, pubDate'
+      channels: '++id, title, link, &feedUrl, description, pubDate',
+      articles: '++id, title, &link, feedUrl, description, content, pubDate',
     });
   }
 }
