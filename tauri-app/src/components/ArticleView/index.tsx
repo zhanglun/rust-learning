@@ -1,23 +1,22 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import Dayjs from 'dayjs';
 // @ts-ignore
 import Mercury from '@postlight/mercury-parser';
-import { Tooltip } from '@douyinfe/semi-ui';
-import { Icon } from '../Icon';
-import { openBrowser } from '../../helper';
+import {Icon} from '../Icon';
+import {openBrowser} from '../../helper';
 import styles from './view.module.css';
-import { Loading } from '../Loading';
+import {Loading} from '../Loading';
 
 type ArticleViewProps = {
   article: any | null;
 };
 
 function createMarkup(html: string) {
-  return { __html: html };
+  return {__html: html};
 }
 
 export const ArticleView = (props: ArticleViewProps): JSX.Element => {
-  const { article } = props;
+  const {article} = props;
   const [loading, setLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
   const [pageContent, setPageContent] = useState('');
@@ -32,7 +31,8 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
     if (article) openBrowser(article.link);
   }, [article]);
 
-  function favoriteIt() {}
+  function favoriteIt() {
+  }
 
   const renderPlaceholder = useCallback(() => {
     // return <div className={styles.placeholder} />;
@@ -44,35 +44,27 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
       <div className={`${styles.main} ${styles.main}`}>
         <div className={styles.helpBar}>
           <div className={styles.menu}>
-            <Tooltip content="标记已读">
-              <Icon
-                customClass={`${styles.menuIcon}`}
-                name="done"
-                onClick={favoriteIt}
-              />
-            </Tooltip>
-            <Tooltip content="标记未读">
-              <Icon
-                customClass={`${styles.menuIcon}`}
-                name="radio_button_unchecked"
-                onClick={favoriteIt}
-              />
-            </Tooltip>
-            <Tooltip content="收藏">
-              <Icon
-                customClass={`${styles.menuIcon}`}
-                name="favorite"
-                onClick={favoriteIt}
-              />
-            </Tooltip>
+            <Icon
+              customClass={`${styles.menuIcon}`}
+              name="done"
+              onClick={favoriteIt}
+            />
+            <Icon
+              customClass={`${styles.menuIcon}`}
+              name="radio_button_unchecked"
+              onClick={favoriteIt}
+            />
+            <Icon
+              customClass={`${styles.menuIcon}`}
+              name="favorite"
+              onClick={favoriteIt}
+            />
 
-            <Tooltip content="在浏览器中打开">
-              <Icon
-                customClass={`${styles.menuIcon}`}
-                name="link"
-                onClick={openInBrowser}
-              />
-            </Tooltip>
+            <Icon
+              customClass={`${styles.menuIcon}`}
+              name="link"
+              onClick={openInBrowser}
+            />
           </div>
         </div>
         <div className={styles.header}>
@@ -83,7 +75,7 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
             </span>
             <span className={styles.author}>{article.author}</span>
             <span className={styles.channelInfo}>
-              <img src={article.channelFavicon} alt="" />
+              <img src={article.channelFavicon} alt=""/>
               {article.channelTitle}
             </span>
           </div>
@@ -94,21 +86,13 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={createMarkup(pageContent)}
           />
-          <button
-            type="button"
-            className={styles.browserButton}
-            aria-hidden="true"
-            onClick={openInBrowser}
-          >
-            查看网站
-          </button>
         </div>
       </div>
     );
   }, [article, openInBrowser, pageContent]);
 
   function handleGlobalClick(e: any) {
-    const { nodeName, href } = e.target;
+    const {nodeName, href} = e.target;
 
     if (nodeName.toLowerCase() === 'a' && href) {
       openBrowser(href);
@@ -118,7 +102,7 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
 
   useEffect(() => {
     resetScrollTop();
-    article && setPageContent(article.content);
+    article && setPageContent(article.content || article.description);
   }, [article]);
 
   return (

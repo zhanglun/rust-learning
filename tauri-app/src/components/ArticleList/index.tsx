@@ -5,13 +5,12 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { useLiveQuery } from 'dexie-react-hooks';
+import {useLiveQuery} from 'dexie-react-hooks';
 // @ts-ignores
-import { Dropdown } from '@douyinfe/semi-ui';
-import { Icon } from '../Icon';
-import { ArticleItem } from '../ArticleItem';
-import { Loading } from '../Loading';
-import { db } from '../../db';
+import {Icon} from '../Icon';
+import {ArticleItem} from '../ArticleItem';
+import {Loading} from '../Loading';
+import {db} from '../../db';
 
 import styles from './articlelist.module.css';
 
@@ -23,13 +22,13 @@ type ListFilter = {
 
 type ArticleListProps = {
   channelId: string | null;
-  feedUrl: string| null;
+  feedUrl: string | null;
   title: string | null;
   onArticleSelect: (article: any) => void;
 };
 
 export const ArticleList = (props: ArticleListProps): JSX.Element => {
-  const { channelId, feedUrl, title } = props;
+  const {channelId, feedUrl, title} = props;
   const articleList = useLiveQuery(
     () => db.articles.where("feedUrl").equalsIgnoreCase(feedUrl as string).toArray(),
     [feedUrl]
@@ -44,6 +43,7 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
 
   const resetScrollTop = () => {
     if (articleListRef.current !== null) {
+      console.log('scroll');
       articleListRef.current.scroll(0, 0);
     }
   };
@@ -71,7 +71,7 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
    * 判断是否需要同步
    * @param channel 频道信息
    */
-  const checkSyncStatus = (channel: any  | null) => {
+  const checkSyncStatus = (channel: any | null) => {
 
   };
 
@@ -103,7 +103,7 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
   }, [channelId]);
 
   return (
-    <div className={styles.container} ref={articleListRef}>
+    <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.title}>{title}</div>
         <div className={styles.menu}>
@@ -117,49 +117,49 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
             name="refresh"
             onClick={handleRefresh}
           />
-          <Dropdown
-            clickToHide
-            trigger="click"
-            position="bottomRight"
-            render={
-              <Dropdown.Menu>
-                <Dropdown.Item active={listFilter.unread}>
-                  <span
-                    className={`${listFilter.unread && styles.active}`}
-                    onClick={showUnread}
-                  >
-                    未读文章
-                  </span>
-                </Dropdown.Item>
-                <Dropdown.Item active={listFilter.read}>
-                  <span
-                    className={`${listFilter.read && styles.active}`}
-                    onClick={showRead}
-                  >
-                    已读文章
-                  </span>
-                </Dropdown.Item>
-                <Dropdown.Item active={listFilter.all}>
-                  <span
-                    className={`${listFilter.all && styles.active}`}
-                    onClick={showAll}
-                  >
-                    全部文章
-                  </span>
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            }
-          >
-            <span>
-              <Icon customClass={styles.menuIcon} name="filter_alt" />
-            </span>
-          </Dropdown>
+          {/*<Dropdown*/}
+          {/*  clickToHide*/}
+          {/*  trigger="click"*/}
+          {/*  position="bottomRight"*/}
+          {/*  render={*/}
+          {/*    <Dropdown.Menu>*/}
+          {/*      <Dropdown.Item active={listFilter.unread}>*/}
+          {/*        <span*/}
+          {/*          className={`${listFilter.unread && styles.active}`}*/}
+          {/*          onClick={showUnread}*/}
+          {/*        >*/}
+          {/*          未读文章*/}
+          {/*        </span>*/}
+          {/*      </Dropdown.Item>*/}
+          {/*      <Dropdown.Item active={listFilter.read}>*/}
+          {/*        <span*/}
+          {/*          className={`${listFilter.read && styles.active}`}*/}
+          {/*          onClick={showRead}*/}
+          {/*        >*/}
+          {/*          已读文章*/}
+          {/*        </span>*/}
+          {/*      </Dropdown.Item>*/}
+          {/*      <Dropdown.Item active={listFilter.all}>*/}
+          {/*        <span*/}
+          {/*          className={`${listFilter.all && styles.active}`}*/}
+          {/*          onClick={showAll}*/}
+          {/*        >*/}
+          {/*          全部文章*/}
+          {/*        </span>*/}
+          {/*      </Dropdown.Item>*/}
+          {/*    </Dropdown.Menu>*/}
+          {/*  }*/}
+          {/*>*/}
+          {/*  <span>*/}
+          {/*    <Icon customClass={styles.menuIcon} name="filter_alt" />*/}
+          {/*  </span>*/}
+          {/*</Dropdown>*/}
         </div>
       </div>
-      <div className={styles.inner}>
+      <div className={styles.inner} ref={articleListRef}>
         {syncing && <div className={styles.syncingBar}>同步中</div>}
         {loading ? (
-          <Loading />
+          <Loading/>
         ) : (
           <ul className={styles.list}>{renderList()}</ul>
         )}

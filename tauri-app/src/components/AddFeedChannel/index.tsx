@@ -6,7 +6,7 @@ import { db, Channel as ChannelModel, Article as ArticleModel } from "../../db";
 
 export const AddFeedChannel = (props: any) => {
   const { showStatus, showModal, hideModal, toggleModal } = useModal();
-  const [feedUrl, setFeedUrl] = useState("https://post.smzdm.com/feed");
+  const [feedUrl, setFeedUrl] = useState("https://nodejs.org/en/feed/blog.xml");
   const [title, setTitle] = useState("");
   const [channel, setChannel] = useState({} as ChannelModel);
   const [articles, setArticles] = useState([] as ArticleModel[]);
@@ -59,6 +59,7 @@ export const AddFeedChannel = (props: any) => {
               feed.content = content;
               break;
             case "author":
+            case "dc:creator":
               feed.author = content;
               break;
             case "pubDate":
