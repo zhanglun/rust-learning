@@ -1,12 +1,13 @@
-import React, {useState, useEffect, useRef } from 'react';
-import { useLiveQuery } from 'dexie-react-hooks';
+import React, {useState, useEffect, useRef} from 'react';
+import {useLiveQuery} from 'dexie-react-hooks';
 import {Icon} from '../Icon';
 import styles from './channel.module.css';
 import defaultSiteIcon from './default.png';
 import {useNavigate} from "react-router-dom";
 import {RouteConfig} from "../../config";
-import { db } from '../../db';
-import { AddFeedChannel } from '../AddFeedChannel';
+import {db} from '../../db';
+import {AddFeedChannel} from '../AddFeedChannel';
+import {Toast} from "../Toast";
 
 const ChannelList = (): JSX.Element => {
   const channelList = useLiveQuery(
@@ -24,6 +25,11 @@ const ChannelList = (): JSX.Element => {
   };
 
   const refreshList = () => {
+    Toast.show({
+      type: 'success',
+      title: '正在同步',
+      content: '同步所有订阅，可能会花一小段时间，请稍候',
+    })
   };
 
   const viewArticles = async (channel: any) => {

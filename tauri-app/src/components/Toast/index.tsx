@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import styles from './index.css';
+import styles from './index.module.css';
 
 type ThemeType = 'success' | 'info' | 'error';
+
 export interface ToastProps {
   id: string;
   type?: ThemeType;
@@ -12,7 +13,7 @@ export interface ToastProps {
   duration?: number;
 }
 
-const ToastIntance = (props: ToastProps) => {
+const ToastInstance = (props: ToastProps) => {
   const { destroy, content, title, duration = 1500, type = 'success' } = props;
 
   useEffect(() => {
@@ -82,7 +83,7 @@ export class ToastManager {
   private render(): void {
     const toastsList = this.toasts.map((toastProps: ToastProps) => (
       // eslint-disable-next-line react/jsx-props-no-spreading
-      <ToastIntance key={toastProps.id} {...toastProps} />
+      <ToastInstance key={toastProps.id} {...toastProps} />
     ));
     ReactDOM.render(toastsList, this.containerRef);
   }
