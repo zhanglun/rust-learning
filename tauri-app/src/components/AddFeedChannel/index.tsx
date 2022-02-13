@@ -73,6 +73,8 @@ export const AddFeedChannel = (props: any) => {
           child = child.nextElementSibling;
         }
 
+        console.log(feed);
+
         res.push(feed);
       }
 

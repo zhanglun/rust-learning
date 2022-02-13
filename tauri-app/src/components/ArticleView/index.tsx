@@ -34,13 +34,21 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
   function favoriteIt() {
   }
 
-  const renderPlaceholder = useCallback(() => {
-    // return <div className={styles.placeholder} />;
+  const renderPlaceholder = () => {
     return '';
-  }, []);
+  };
 
-  const renderDetail = useCallback(() => {
-    return !article ? null : (
+  const renderDetail = () => {
+    if (!article) {
+      return null;
+    }
+
+    const {feedUrl} = article;
+
+    const hostname = feedUrl ? new URL(feedUrl).hostname : ''
+    const ico = "https://icons.duckduckgo.com/ip3/" + hostname + ".ico";
+
+    return (
       <div className={`${styles.main} ${styles.main}`}>
         <div className={styles.helpBar}>
           <div className={styles.menu}>
@@ -75,7 +83,7 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
             </span>
             <span className={styles.author}>{article.author}</span>
             <span className={styles.channelInfo}>
-              <img src={article.channelFavicon} alt=""/>
+              <img src={ico} alt=""/>
               {article.channelTitle}
             </span>
           </div>
@@ -89,7 +97,7 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
         </div>
       </div>
     );
-  }, [article, openInBrowser, pageContent]);
+  };
 
   function handleGlobalClick(e: any) {
     const {nodeName, href} = e.target;
