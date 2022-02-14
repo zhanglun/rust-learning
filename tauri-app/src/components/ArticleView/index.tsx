@@ -3,9 +3,7 @@ import Dayjs from 'dayjs';
 // @ts-ignore
 import Mercury from '@postlight/mercury-parser';
 import {Icon} from '../Icon';
-import {openBrowser} from '../../helper';
 import styles from './view.module.css';
-import {Loading} from '../Loading';
 
 type ArticleViewProps = {
   article: any | null;
@@ -17,7 +15,6 @@ function createMarkup(html: string) {
 
 export const ArticleView = (props: ArticleViewProps): JSX.Element => {
   const {article} = props;
-  const [loading, setLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
   const [pageContent, setPageContent] = useState('');
 
@@ -27,9 +24,8 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
     }
   };
 
-  const openInBrowser = useCallback(() => {
-    if (article) openBrowser(article.link);
-  }, [article]);
+  const openInBrowser = () => {
+  };
 
   function favoriteIt() {
   }
@@ -99,18 +95,19 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
     );
   };
 
-  function handleGlobalClick(e: any) {
-    const {nodeName, href} = e.target;
-
-    if (nodeName.toLowerCase() === 'a' && href) {
-      openBrowser(href);
-      e.preventDefault();
-    }
-  }
-
   useEffect(() => {
     resetScrollTop();
-    article && setPageContent(article.content || article.description);
+    if (article) {
+      const content = (article.content || article.description).replace(/<a[^>]+>/ig, (a: string) => {
+        if (!/\starget\s*=/ig.test(a)) {
+          return a.replace(/^<a\s/, '<a target="_blank"');
+        };
+
+        return a;
+      });
+
+      setPageContent(content);
+    }
   }, [article]);
 
   return (
@@ -118,7 +115,6 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
     <div
       className={styles.container}
       ref={containerRef}
-      onClick={handleGlobalClick}
     >
       {/* {loading && <Loading />} */}
       {article ? renderDetail() : renderPlaceholder()}

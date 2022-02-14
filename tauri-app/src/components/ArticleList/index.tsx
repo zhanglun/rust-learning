@@ -76,6 +76,7 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
   };
 
   const syncArticles = () => {
+
   };
 
   const handleRefresh = () => {

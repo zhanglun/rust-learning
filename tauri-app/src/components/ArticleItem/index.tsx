@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 // @ts-ignores
 import Dayjs from 'dayjs';
 import styles from './articleitem.module.css';
