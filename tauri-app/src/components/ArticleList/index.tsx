@@ -1,18 +1,16 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, {
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import {useLiveQuery} from 'dexie-react-hooks';
+import React, { useEffect, useRef, useState } from "react";
+import { useLiveQuery } from "dexie-react-hooks";
 // @ts-ignores
-import {Icon} from '../Icon';
-import {ArticleItem} from '../ArticleItem';
-import {Loading} from '../Loading';
-import {db} from '../../db';
+import { Icon } from "../Icon";
+import { ArticleItem } from "../ArticleItem";
+import { Loading } from "../Loading";
+import { db } from "../../db";
+import { requestFeed } from "../../helpers/parseXML";
 
-import styles from './articlelist.module.css';
+import styles from "./articlelist.module.css";
+import { Toast } from "../Toast";
 
 type ListFilter = {
   all?: boolean;
@@ -28,11 +26,16 @@ type ArticleListProps = {
 };
 
 export const ArticleList = (props: ArticleListProps): JSX.Element => {
-  const {channelId, feedUrl, title} = props;
-  const articleList = useLiveQuery(
-    () => db.articles.where("feedUrl").equalsIgnoreCase(feedUrl as string).toArray(),
-    [feedUrl]
-  ) || [];
+  const { channelId, feedUrl, title } = props;
+  const articleList =
+    useLiveQuery(
+      () =>
+        db.articles
+          .where("feedUrl")
+          .equalsIgnoreCase(feedUrl as string)
+          .toArray(),
+      [feedUrl]
+    ) || [];
 
   const [loading, setLoading] = useState(false);
   const articleListRef = useRef<HTMLDivElement>(null);
@@ -43,13 +46,13 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
 
   const resetScrollTop = () => {
     if (articleListRef.current !== null) {
-      console.log('scroll');
+      console.log("scroll");
       articleListRef.current.scroll(0, 0);
     }
   };
 
   const handleArticleSelect = (article: any) => {
-    console.log('handleArticleSelect');
+    console.log("handleArticleSelect");
     if (props.onArticleSelect) {
       props.onArticleSelect(article);
     }
@@ -71,29 +74,37 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
    * 判断是否需要同步
    * @param channel 频道信息
    */
-  const checkSyncStatus = (channel: any | null) => {
-
-  };
+  const checkSyncStatus = (channel: any | null) => {};
 
   const syncArticles = () => {
+    feedUrl && requestFeed(feedUrl).then((res) => {
+      if (res.channel && res.items) {
+        const { channel, items } = res;
 
+        db.transaction("rw", db.channels, db.articles, async () => {
+          db.channels.add(channel);
+          db.articles.bulkAdd(items);
+        }).then(() => {
+          Toast.show({
+            title: 'success',
+            content: 'Sync Success!'
+          })
+        });
+      }
+    });
   };
 
   const handleRefresh = () => {
     syncArticles();
   };
 
-  const showAll = () => {
-  };
+  const showAll = () => {};
 
-  const showUnread = () => {
-  };
+  const showUnread = () => {};
 
-  const showRead = () => {
-  };
+  const showRead = () => {};
 
-  const markAllRead = () => {
-  };
+  const markAllRead = () => {};
 
   useEffect(() => {
     resetScrollTop();
@@ -160,7 +171,7 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
       <div className={styles.inner} ref={articleListRef}>
         {syncing && <div className={styles.syncingBar}>同步中</div>}
         {loading ? (
-          <Loading/>
+          <Loading />
         ) : (
           <ul className={styles.list}>{renderList()}</ul>
         )}

@@ -1,35 +1,32 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {useLiveQuery} from 'dexie-react-hooks';
-import {Icon} from '../Icon';
-import styles from './channel.module.css';
-import defaultSiteIcon from './default.png';
-import {useNavigate} from "react-router-dom";
-import {RouteConfig} from "../../config";
-import {db} from '../../db';
-import {AddFeedChannel} from '../AddFeedChannel';
-import {Toast} from "../Toast";
+import React, { useState, useEffect, useRef } from "react";
+import { useLiveQuery } from "dexie-react-hooks";
+import { Icon } from "../Icon";
+import styles from "./channel.module.css";
+import defaultSiteIcon from "./default.png";
+import { useNavigate } from "react-router-dom";
+import { RouteConfig } from "../../config";
+import { db } from "../../db";
+import { AddFeedChannel } from "../AddFeedChannel";
+import { Toast } from "../Toast";
+import { getFavico } from "../../helpers/parseXML";
 
 const ChannelList = (): JSX.Element => {
-  const channelList = useLiveQuery(
-    () => db.channels.toArray(),
-    []
-  );
+  const channelList = useLiveQuery(() => db.channels.toArray(), []);
 
   const navigate = useNavigate();
   const addFeedButtonRef = useRef(null);
-  const [currentId, setCurrentId] = useState('');
+  const [currentId, setCurrentId] = useState("");
   const [sum, setSum] = useState(0);
   const [todayUnread, setTodayUnread] = useState(0);
 
-  const initial = () => {
-  };
+  const initial = () => {};
 
   const refreshList = () => {
     Toast.show({
-      type: 'success',
-      title: '正在同步',
-      content: '同步所有订阅，可能会花一小段时间，请稍候',
-    })
+      type: "success",
+      title: "正在同步",
+      content: "同步所有订阅，可能会花一小段时间，请稍候",
+    });
   };
 
   const viewArticles = async (channel: any) => {
@@ -40,55 +37,50 @@ const ChannelList = (): JSX.Element => {
     );
   };
 
-  const viewInbox = () => {
-  };
+  const viewInbox = () => {};
 
   const goToSetting = () => {
     navigate(RouteConfig.SETTINGS);
   };
 
-  const viewToday = () => {
-  };
+  const viewToday = () => {};
 
   const renderFeedList = (): JSX.Element => {
     return (
       <ul className={styles.list}>
-        {channelList?.map(
-          (channel: any, i: number) => {
-            const {articleCount = 0, link} = channel;
-            const hostname = link ? new URL(link).hostname : ''
-            const ico = "https://icons.duckduckgo.com/ip3/" + hostname + ".ico";
+        {channelList?.map((channel: any, i: number) => {
+          const { articleCount = 0, link } = channel;
+          const ico = getFavico(link);
 
-            return (
-              <li
-                className={`${styles.item} ${
-                  currentId === channel.id ? styles.itemActive : ''
-                }`}
-                // eslint-disable-next-line react/no-array-index-key
-                key={channel.title + i}
-                onClick={() => viewArticles(channel)}
-                aria-hidden="true"
-              >
-                <img
-                  src={ico}
-                  onError={(e) => {
-                    // @ts-ignore
-                    e.target.onerror = null;
+          return (
+            <li
+              className={`${styles.item} ${
+                currentId === channel.id ? styles.itemActive : ""
+              }`}
+              // eslint-disable-next-line react/no-array-index-key
+              key={channel.title + i}
+              onClick={() => viewArticles(channel)}
+              aria-hidden="true"
+            >
+              <img
+                src={ico}
+                onError={(e) => {
+                  // @ts-ignore
+                  e.target.onerror = null;
 
-                    // @ts-ignore
-                    e.target.src = defaultSiteIcon;
-                  }}
-                  className={styles.icon}
-                  alt={channel.title}
-                />
-                <span className={styles.name}>{channel.title}</span>
-                {articleCount > 0 && (
-                  <span className={styles.count}>{articleCount}</span>
-                )}
-              </li>
-            );
-          }
-        )}
+                  // @ts-ignore
+                  e.target.src = defaultSiteIcon;
+                }}
+                className={styles.icon}
+                alt={channel.title}
+              />
+              <span className={styles.name}>{channel.title}</span>
+              {articleCount > 0 && (
+                <span className={styles.count}>{articleCount}</span>
+              )}
+            </li>
+          );
+        })}
       </ul>
     );
   };
@@ -103,14 +95,13 @@ const ChannelList = (): JSX.Element => {
     initial();
   }, []);
 
-
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.toolbar}>
-          <AddFeedChannel Aref={addFeedButtonRef}/>
-          <Icon name="add" customClass={styles.toolbarItem} onClick={addFeed}/>
-          <Icon name="folder" customClass={styles.toolbarItem}/>
+          <AddFeedChannel Aref={addFeedButtonRef} />
+          <Icon name="add" customClass={styles.toolbarItem} onClick={addFeed} />
+          <Icon name="folder" customClass={styles.toolbarItem} />
           <Icon
             name="refresh"
             customClass={styles.toolbarItem}
@@ -157,4 +148,4 @@ const ChannelList = (): JSX.Element => {
   );
 };
 
-export {ChannelList};
+export { ChannelList };

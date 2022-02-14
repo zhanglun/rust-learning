@@ -96,5 +96,3 @@ input:focus {
 .no-electron-drag {
   -webkit-app-region: no-drag;
 }
-
-@import '@douyinfe/semi-ui/dist/css/semi.min.css';

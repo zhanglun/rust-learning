@@ -40,6 +40,7 @@ pub fn get_menu() -> Menu {
     .add_item(test_item);
 
     let edit_menu = Menu::new()
+      .add_native_item(MenuItem::SelectAll)
       .add_native_item(MenuItem::Copy)
       .add_native_item(MenuItem::Paste)
       .add_native_item(MenuItem::Separator)

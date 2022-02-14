@@ -1,22 +1,23 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import Dayjs from 'dayjs';
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import Dayjs from "dayjs";
 // @ts-ignore
-import Mercury from '@postlight/mercury-parser';
-import {Icon} from '../Icon';
-import styles from './view.module.css';
+import Mercury from "@postlight/mercury-parser";
+import { Icon } from "../Icon";
+import styles from "./view.module.css";
+import { getFavico } from "../../helpers/parseXML";
 
 type ArticleViewProps = {
   article: any | null;
 };
 
 function createMarkup(html: string) {
-  return {__html: html};
+  return { __html: html };
 }
 
 export const ArticleView = (props: ArticleViewProps): JSX.Element => {
-  const {article} = props;
+  const { article } = props;
   const containerRef = useRef<HTMLDivElement>(null);
-  const [pageContent, setPageContent] = useState('');
+  const [pageContent, setPageContent] = useState("");
 
   const resetScrollTop = () => {
     if (containerRef.current !== null) {
@@ -24,14 +25,12 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
     }
   };
 
-  const openInBrowser = () => {
-  };
+  const openInBrowser = () => {};
 
-  function favoriteIt() {
-  }
+  function favoriteIt() {}
 
   const renderPlaceholder = () => {
-    return '';
+    return "";
   };
 
   const renderDetail = () => {
@@ -39,10 +38,9 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
       return null;
     }
 
-    const {feedUrl} = article;
-
-    const hostname = feedUrl ? new URL(feedUrl).hostname : ''
-    const ico = "https://icons.duckduckgo.com/ip3/" + hostname + ".ico";
+    const { feedUrl } = article;
+    console.log(feedUrl);
+    const ico = getFavico(feedUrl)
 
     return (
       <div className={`${styles.main} ${styles.main}`}>
@@ -75,11 +73,11 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
           <div className={styles.title}>{article.title}</div>
           <div className={styles.meta}>
             <span className={styles.time}>
-              {Dayjs().format('YYYY-MM-DD HH:mm')}
+              {Dayjs().format("YYYY-MM-DD HH:mm")}
             </span>
             <span className={styles.author}>{article.author}</span>
             <span className={styles.channelInfo}>
-              <img src={ico} alt=""/>
+              <img src={ico} alt="" />
               {article.channelTitle}
             </span>
           </div>
@@ -98,13 +96,16 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
   useEffect(() => {
     resetScrollTop();
     if (article) {
-      const content = (article.content || article.description).replace(/<a[^>]+>/ig, (a: string) => {
-        if (!/\starget\s*=/ig.test(a)) {
-          return a.replace(/^<a\s/, '<a target="_blank"');
-        };
+      const content = (article.content || article.description || "").replace(
+        /<a[^>]+>/gi,
+        (a: string) => {
+          if (!/\starget\s*=/gi.test(a)) {
+            return a.replace(/^<a\s/, '<a target="_blank"');
+          }
 
-        return a;
-      });
+          return a;
+        }
+      );
 
       setPageContent(content);
     }
@@ -112,10 +113,7 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
 
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
-    <div
-      className={styles.container}
-      ref={containerRef}
-    >
+    <div className={styles.container} ref={containerRef}>
       {/* {loading && <Loading />} */}
       {article ? renderDetail() : renderPlaceholder()}
     </div>
