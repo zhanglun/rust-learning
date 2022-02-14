@@ -38,9 +38,8 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
       return null;
     }
 
-    const { feedUrl } = article;
-    console.log(feedUrl);
-    const ico = getFavico(feedUrl)
+    const { feedUrl, link } = article;
+    const ico = getFavico(feedUrl);
 
     return (
       <div className={`${styles.main} ${styles.main}`}>
@@ -61,12 +60,13 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
               name="favorite"
               onClick={favoriteIt}
             />
-
-            <Icon
-              customClass={`${styles.menuIcon}`}
-              name="link"
-              onClick={openInBrowser}
-            />
+            <a target="_blank" rel="noreferrer" href={link}>
+              <Icon
+                customClass={`${styles.menuIcon}`}
+                name="link"
+                onClick={openInBrowser}
+              />
+            </a>
           </div>
         </div>
         <div className={styles.header}>
