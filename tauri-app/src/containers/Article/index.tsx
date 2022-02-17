@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
-import { ArticleList } from '../../components/ArticleList';
-import { ArticleView } from '../../components/ArticleView';
-import styles from './index.module.css';
+import React, { useCallback, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import { ArticleList } from "../../components/ArticleList";
+import { ArticleView } from "../../components/ArticleView";
+import { MainHeader } from "../../components/MainHeader";
+import styles from "./index.module.css";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -10,7 +11,7 @@ function useQuery() {
 
 export const ArticleContainer = (): JSX.Element => {
   // @ts-ignore
-  const params: {name: string} = useParams();
+  const params: { name: string } = useParams();
   const query = useQuery();
   const [current, setCurrent] = useState<any>(null);
 
@@ -20,12 +21,16 @@ export const ArticleContainer = (): JSX.Element => {
 
   return (
     <div className={styles.article}>
-      {/* <GlobalToolbar /> */}
+      <MainHeader
+        title={params.name}
+        channelId={query.get("channelId")}
+        feedUrl={query.get("feedUrl")}
+      />
       <div className={styles.mainView}>
         <ArticleList
           title={params.name}
-          channelId={query.get('channelId')}
-          feedUrl={query.get('feedUrl')}
+          channelId={query.get("channelId")}
+          feedUrl={query.get("feedUrl")}
           onArticleSelect={handleArticleSelect}
         />
         <ArticleView article={current} />

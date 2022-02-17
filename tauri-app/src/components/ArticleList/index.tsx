@@ -2,15 +2,11 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useRef, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-// @ts-ignores
-import { Icon } from "../Icon";
 import { ArticleItem } from "../ArticleItem";
 import { Loading } from "../Loading";
 import { db } from "../../db";
-import { requestFeed } from "../../helpers/parseXML";
 
 import styles from "./articlelist.module.css";
-import { Toast } from "../Toast";
 
 type ListFilter = {
   all?: boolean;
@@ -26,7 +22,7 @@ type ArticleListProps = {
 };
 
 export const ArticleList = (props: ArticleListProps): JSX.Element => {
-  const { channelId, feedUrl, title } = props;
+  const { channelId, feedUrl } = props;
   const articleList =
     useLiveQuery(
       () =>
@@ -52,7 +48,6 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
   };
 
   const handleArticleSelect = (article: any) => {
-    console.log("handleArticleSelect");
     if (props.onArticleSelect) {
       props.onArticleSelect(article);
     }
@@ -76,28 +71,6 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
    */
   const checkSyncStatus = (channel: any | null) => {};
 
-  const syncArticles = () => {
-    feedUrl && requestFeed(feedUrl).then((res) => {
-      if (res.channel && res.items) {
-        const { channel, items } = res;
-
-        db.transaction("rw", db.channels, db.articles, async () => {
-          db.channels.add(channel);
-          db.articles.bulkAdd(items);
-        }).then(() => {
-          Toast.show({
-            title: 'success',
-            content: 'Sync Success!'
-          })
-        });
-      }
-    });
-  };
-
-  const handleRefresh = () => {
-    syncArticles();
-  };
-
   const showAll = () => {};
 
   const showUnread = () => {};
@@ -116,58 +89,6 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <div className={styles.title}>{title}</div>
-        <div className={styles.menu}>
-          <Icon
-            customClass={styles.menuIcon}
-            name="checklist"
-            onClick={markAllRead}
-          />
-          <Icon
-            customClass={styles.menuIcon}
-            name="refresh"
-            onClick={handleRefresh}
-          />
-          {/*<Dropdown*/}
-          {/*  clickToHide*/}
-          {/*  trigger="click"*/}
-          {/*  position="bottomRight"*/}
-          {/*  render={*/}
-          {/*    <Dropdown.Menu>*/}
-          {/*      <Dropdown.Item active={listFilter.unread}>*/}
-          {/*        <span*/}
-          {/*          className={`${listFilter.unread && styles.active}`}*/}
-          {/*          onClick={showUnread}*/}
-          {/*        >*/}
-          {/*          未读文章*/}
-          {/*        </span>*/}
-          {/*      </Dropdown.Item>*/}
-          {/*      <Dropdown.Item active={listFilter.read}>*/}
-          {/*        <span*/}
-          {/*          className={`${listFilter.read && styles.active}`}*/}
-          {/*          onClick={showRead}*/}
-          {/*        >*/}
-          {/*          已读文章*/}
-          {/*        </span>*/}
-          {/*      </Dropdown.Item>*/}
-          {/*      <Dropdown.Item active={listFilter.all}>*/}
-          {/*        <span*/}
-          {/*          className={`${listFilter.all && styles.active}`}*/}
-          {/*          onClick={showAll}*/}
-          {/*        >*/}
-          {/*          全部文章*/}
-          {/*        </span>*/}
-          {/*      </Dropdown.Item>*/}
-          {/*    </Dropdown.Menu>*/}
-          {/*  }*/}
-          {/*>*/}
-          {/*  <span>*/}
-          {/*    <Icon customClass={styles.menuIcon} name="filter_alt" />*/}
-          {/*  </span>*/}
-          {/*</Dropdown>*/}
-        </div>
-      </div>
       <div className={styles.inner} ref={articleListRef}>
         {syncing && <div className={styles.syncingBar}>同步中</div>}
         {loading ? (

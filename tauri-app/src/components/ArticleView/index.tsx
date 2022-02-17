@@ -17,6 +17,7 @@ function createMarkup(html: string) {
 export const ArticleView = (props: ArticleViewProps): JSX.Element => {
   const { article } = props;
   const containerRef = useRef<HTMLDivElement>(null);
+  const helpBarRef = useRef<HTMLDivElement>(null);
   const [pageContent, setPageContent] = useState("");
 
   const resetScrollTop = () => {
@@ -43,7 +44,7 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
 
     return (
       <div className={`${styles.main} ${styles.main}`}>
-        <div className={styles.helpBar}>
+        <div className={styles.helpBar} ref={helpBarRef} >
           <div className={styles.menu}>
             <Icon
               customClass={`${styles.menuIcon}`}
@@ -95,6 +96,7 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
 
   useEffect(() => {
     resetScrollTop();
+
     if (article) {
       const content = (article.content || article.description || "").replace(
         /<a[^>]+>/gi,
@@ -110,6 +112,26 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
       setPageContent(content);
     }
   }, [article]);
+
+  useEffect(() => {
+    if (!containerRef || !containerRef.current) {
+      return;
+    }
+
+    const handleScroll = () => {
+      if (containerRef.current && helpBarRef.current && containerRef.current?.scrollTop > 300) {
+        console.log('111');
+      }
+    }
+
+    containerRef.current.addEventListener("scroll", handleScroll);
+
+    return () => {
+      if (containerRef.current) {
+        containerRef.current.removeEventListener("scroll", handleScroll);
+      }
+    }
+  }, []);
 
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
