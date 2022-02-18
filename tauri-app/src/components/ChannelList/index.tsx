@@ -5,7 +5,7 @@ import styles from "./channel.module.css";
 import defaultSiteIcon from "./default.png";
 import { useNavigate } from "react-router-dom";
 import { RouteConfig } from "../../config";
-import { db, Channel as ChannelModel } from "../../db";
+import { db } from "../../db";
 import { AddFeedChannel } from "../AddFeedChannel";
 import { Toast } from "../Toast";
 import { getFavico, requestFeed } from "../../helpers/parseXML";
@@ -22,6 +22,20 @@ const ChannelList = (): JSX.Element => {
   const initial = () => {};
   const loadAndUpdate = (url: string) => {
     return requestFeed(url).then((res) => {
+      if (res.channel && res.items) {
+        const { channel, items } = res;
+
+        db.transaction("rw", db.channels, db.articles, async () => {
+          db.channels.add(channel);
+          db.articles.bulkAdd(items);
+        }).then(() => {
+          Toast.show({
+            title: "success",
+            content: "Sync Success!",
+          });
+        });
+      }
+
       return res;
     });
   };
