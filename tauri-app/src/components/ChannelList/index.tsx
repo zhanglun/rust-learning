@@ -5,10 +5,10 @@ import styles from "./channel.module.css";
 import defaultSiteIcon from "./default.png";
 import { useNavigate } from "react-router-dom";
 import { RouteConfig } from "../../config";
-import { db } from "../../db";
+import { db, Channel as ChannelModel } from "../../db";
 import { AddFeedChannel } from "../AddFeedChannel";
 import { Toast } from "../Toast";
-import { getFavico } from "../../helpers/parseXML";
+import { getFavico, requestFeed } from "../../helpers/parseXML";
 
 const ChannelList = (): JSX.Element => {
   const channelList = useLiveQuery(() => db.channels.toArray(), []);
@@ -20,12 +20,59 @@ const ChannelList = (): JSX.Element => {
   const [todayUnread, setTodayUnread] = useState(0);
 
   const initial = () => {};
+  const loadAndUpdate = (url: string) => {
+    return requestFeed(url).then((res) => {
+      return res;
+    });
+  };
 
   const refreshList = () => {
     Toast.show({
       type: "success",
       title: "正在同步",
       content: "同步所有订阅，可能会花一小段时间，请稍候",
+    });
+
+    const urlList = (channelList || []).map((channel) => {
+      return channel.feedUrl;
+    });
+
+    const limit = 5;
+    let cur = 0;
+    let tasks: Promise<any>[] = [];
+    const res: Promise<any>[] = [];
+    const enQueue = (): Promise<any> => {
+      if (cur === urlList?.length || urlList.length === 0) {
+        return Promise.resolve();
+      }
+
+      const url = urlList[cur];
+
+      cur += 1;
+
+      const p = Promise.resolve().then(() => loadAndUpdate(url));
+
+      res.push(p);
+
+      let r = Promise.resolve();
+
+      if (limit <= urlList.length) {
+        const e: Promise<any> = p.then(() => tasks.splice(tasks.indexOf(e), 1));
+        tasks.push(e);
+        if (tasks.length >= limit) {
+          r = Promise.race(tasks);
+        }
+      }
+
+      return r.then(() => enQueue());
+    };
+
+    enQueue().then(() => {
+      Toast.show({
+        type: "success",
+        title: "同步完成",
+      });
+      return Promise.all(res);
     });
   };
 

@@ -162,6 +162,10 @@ export const requestFeed = (
         };
       } else {
         console.log("-=--> http request Error", status, data);
+        return {
+          status,
+          data,
+        }
       }
     });
 };
