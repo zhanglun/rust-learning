@@ -28,11 +28,6 @@ const ChannelList = (): JSX.Element => {
         db.transaction("rw", db.channels, db.articles, async () => {
           db.channels.add(channel);
           db.articles.bulkAdd(items);
-        }).then(() => {
-          Toast.show({
-            title: "success",
-            content: "Sync Success!",
-          });
         });
       }
 

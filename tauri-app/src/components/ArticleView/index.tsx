@@ -43,52 +43,54 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
     const ico = getFavico(feedUrl);
 
     return (
-      <div className={`${styles.main} ${styles.main}`}>
-        <div className={styles.helpBar} ref={helpBarRef} >
-          <div className={styles.menu}>
-            <Icon
-              customClass={`${styles.menuIcon}`}
-              name="done"
-              onClick={favoriteIt}
-            />
-            <Icon
-              customClass={`${styles.menuIcon}`}
-              name="radio_button_unchecked"
-              onClick={favoriteIt}
-            />
-            <Icon
-              customClass={`${styles.menuIcon}`}
-              name="favorite"
-              onClick={favoriteIt}
-            />
-            <a target="_blank" rel="noreferrer" href={link}>
+      <div className={styles.inner}>
+        <div className={styles.main}>
+          <div className={styles.helpBar} ref={helpBarRef}>
+            <div className={styles.menu}>
               <Icon
                 customClass={`${styles.menuIcon}`}
-                name="link"
-                onClick={openInBrowser}
+                name="done"
+                onClick={favoriteIt}
               />
-            </a>
+              <Icon
+                customClass={`${styles.menuIcon}`}
+                name="radio_button_unchecked"
+                onClick={favoriteIt}
+              />
+              <Icon
+                customClass={`${styles.menuIcon}`}
+                name="favorite"
+                onClick={favoriteIt}
+              />
+              <a target="_blank" rel="noreferrer" href={link}>
+                <Icon
+                  customClass={`${styles.menuIcon}`}
+                  name="link"
+                  onClick={openInBrowser}
+                />
+              </a>
+            </div>
           </div>
-        </div>
-        <div className={styles.header}>
-          <div className={styles.title}>{article.title}</div>
-          <div className={styles.meta}>
-            <span className={styles.time}>
-              {Dayjs().format("YYYY-MM-DD HH:mm")}
-            </span>
-            <span className={styles.author}>{article.author}</span>
-            <span className={styles.channelInfo}>
-              <img src={ico} alt="" />
-              {article.channelTitle}
-            </span>
+          <div className={styles.header}>
+            <div className={styles.title}>{article.title}</div>
+            <div className={styles.meta}>
+              <span className={styles.time}>
+                {Dayjs().format("YYYY-MM-DD HH:mm")}
+              </span>
+              <span className={styles.author}>{article.author}</span>
+              <span className={styles.channelInfo}>
+                <img src={ico} alt="" />
+                {article.channelTitle}
+              </span>
+            </div>
           </div>
-        </div>
-        <div className={styles.body}>
-          <div
-            className={styles.content}
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={createMarkup(pageContent)}
-          />
+          <div className={styles.body}>
+            <div
+              className={styles.content}
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={createMarkup(pageContent)}
+            />
+          </div>
         </div>
       </div>
     );
@@ -119,10 +121,14 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
     }
 
     const handleScroll = () => {
-      if (containerRef.current && helpBarRef.current && containerRef.current?.scrollTop > 300) {
-        console.log('111');
+      if (
+        containerRef.current &&
+        helpBarRef.current &&
+        containerRef.current?.scrollTop > 300
+      ) {
+        console.log("111");
       }
-    }
+    };
 
     containerRef.current.addEventListener("scroll", handleScroll);
 
@@ -130,7 +136,7 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
       if (containerRef.current) {
         containerRef.current.removeEventListener("scroll", handleScroll);
       }
-    }
+    };
   }, []);
 
   return (
