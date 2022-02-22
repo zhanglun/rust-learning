@@ -43,7 +43,7 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
     const ico = getFavico(feedUrl);
 
     return (
-      <div className={styles.inner}>
+      <div className={styles.inner} ref={containerRef}>
         <div className={styles.main}>
           <div className={styles.helpBar} ref={helpBarRef}>
             <div className={styles.menu}>
@@ -141,7 +141,7 @@ export const ArticleView = (props: ArticleViewProps): JSX.Element => {
 
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
-    <div className={styles.container} ref={containerRef}>
+    <div className={styles.container}>
       {/* {loading && <Loading />} */}
       {article ? renderDetail() : renderPlaceholder()}
     </div>
