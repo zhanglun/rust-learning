@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { ArticleItem } from "../ArticleItem";
 import { Loading } from "../Loading";
@@ -36,30 +36,30 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
 
   const [loading, setLoading] = useState(false);
   const articleListRef = useRef<HTMLDivElement>(null);
-  const [listFilter, setListFilter] = useState<ListFilter>({
-    unread: true,
-  });
   const [syncing, setSyncing] = useState(false);
 
   const resetScrollTop = () => {
     if (articleListRef.current !== null) {
-      console.log("scroll");
       articleListRef.current.scroll(0, 0);
     }
   };
 
-  const handleArticleSelect = (article: any) => {
+  const handleArticleSelect = useCallback((article: any) => {
+    db.articles.update(article.id, {
+      unRead: 0,
+    });
+
     if (props.onArticleSelect) {
       props.onArticleSelect(article);
     }
-  };
+  }, []);
 
   const renderList = (): JSX.Element[] => {
     return articleList.map((article: any, idx: number) => {
       return (
         <ArticleItem
           article={article}
-          key={idx}
+          key={article.id}
           onSelect={handleArticleSelect}
         />
       );

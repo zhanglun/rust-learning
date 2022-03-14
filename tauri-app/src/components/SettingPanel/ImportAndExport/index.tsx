@@ -21,10 +21,14 @@ export const ImportAndExport = (props: any) => {
 
     return Array.from($outlines)
       .map(($item: Element) => {
+        const title = $item.getAttribute("title") || $item.getAttribute("text") || "";
+        const feedUrl = $item.getAttribute("xmlUrl") || "";
+        const link = $item.getAttribute("htmlUrl") || new URL(feedUrl).origin || "";
+
         return {
-          title: $item.getAttribute("title") || "",
-          link: $item.getAttribute("htmlUrl") || "",
-          feedUrl: $item.getAttribute("xmlUrl") || "",
+          title,
+          link,
+          feedUrl,
         };
       })
       .filter((item) => item.title && item.feedUrl && item.link);

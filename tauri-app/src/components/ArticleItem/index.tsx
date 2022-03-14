@@ -17,14 +17,15 @@ const bannerImageList = [
   bannerImage5,
 ];
 
-export const ArticleItem = (props: any) => {
+export const ArticleItem = React.memo((props: any) => {
+  console.log('---< render item');
+
   const { article, onSelect } = props;
   const [readStatus, setReadStatus] = useState(false);
   const [bannerImage, setBannerImage] = useState('');
 
-  const markAsRead = () => {};
-
-  console.log(article.pubDate);
+  const markAsRead = () => {
+  };
 
   const handleClick = (e: any) => {
     if(onSelect) {
@@ -46,6 +47,8 @@ export const ArticleItem = (props: any) => {
 
   useEffect(() => {
     setBannerImage(parseBannerImage(article.content));
+    setReadStatus(article.unRead === 0);
+    console.log(article);
   }, [article]);
 
   return (
@@ -62,16 +65,10 @@ export const ArticleItem = (props: any) => {
         <div className={styles.title}>
           <div className={styles.titleText}>{article.title}</div>
         </div>
-        {/* <div className={styles.actions}> */}
-        {/*  <Icon customClass={styles.icon} name="bookmark_add" /> */}
-        {/*  <Icon customClass={styles.icon} name="favorite_border" /> */}
-        {/*  <Icon customClass={styles.icon} name="done" onClick={markAsRead} /> */}
-        {/*  <Icon customClass={styles.icon} name="launch" onClick={openWebPage} /> */}
-        {/* </div> */}
         <div className={styles.date}>
           {Dayjs(article.pubDate).format('YYYY-MM-DD HH:mm')}
         </div>
       </div>
     </li>
   );
-};
+});

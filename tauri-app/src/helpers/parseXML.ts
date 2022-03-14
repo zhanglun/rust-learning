@@ -158,7 +158,7 @@ export const requestFeed = (
 
         return {
           channel: extendChannel(channel, { feedUrl: url }),
-          items: extendFeedItems(items, { feedUrl: url, unRead: 0 }),
+          items: extendFeedItems(items, { feedUrl: url, unRead: 1 }),
         };
       } else {
         console.log("-=--> http request Error", status, data);

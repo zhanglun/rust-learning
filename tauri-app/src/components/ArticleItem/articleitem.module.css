@@ -95,8 +95,8 @@
   color: var(--title-color);
 }
 
-.read .title {
-  color: var(--title-color);
+.read .titleText {
+  color: var(--text-color);
 }
 
 .current {
