@@ -2,9 +2,10 @@ import React from "react";
 import { Icon } from "../Icon";
 import { requestFeed } from "../../helpers/parseXML";
 import { Toast } from "../Toast";
-import { db } from "../../db";
+import { db, Article as ArticleModel, Article } from "../../db";
 
 import styles from "./header.module.css";
+import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 
 type MainHeaderProps = {
   channelId: string | null;
@@ -19,17 +20,29 @@ export const MainHeader = (props: MainHeaderProps) => {
     feedUrl &&
       requestFeed(feedUrl).then((res) => {
         if (res.channel && res.items) {
-          const { channel, items } = res;
+          const { items } = res;
+          const links = items.map((item: ArticleModel) => item.link);
 
-          db.transaction("rw", db.channels, db.articles, async () => {
-            db.channels.add(channel);
-            db.articles.bulkAdd(items);
-          }).then(() => {
-            Toast.show({
-              title: "success",
-              content: "Sync Success!",
+          db.articles
+            .where("link")
+            .anyOf(links)
+            .toArray()
+            .then((exists) => {
+              if (exists.length < items.length) {
+                const remotes = items.filter((item: Article) => {
+                  return !exists.some((exist) => exist.link === item.link);
+                });
+
+                db.transaction("rw", db.articles, async () => {
+                  db.articles.bulkAdd(remotes);
+                }).then(() => {
+                  Toast.show({
+                    title: "success",
+                    content: "Sync Success!",
+                  });
+                });
+              }
             });
-          });
         }
       });
   };
