@@ -24,9 +24,10 @@ export const ArticleItem = (props: any) => {
 
   const markAsRead = () => {};
 
+  console.log(article.pubDate);
+
   const handleClick = (e: any) => {
     if(onSelect) {
-      console.log('---> onSelect');
       onSelect(article);
     }
   };

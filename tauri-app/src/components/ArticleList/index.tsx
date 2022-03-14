@@ -29,7 +29,8 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
         db.articles
           .where("feedUrl")
           .equalsIgnoreCase(feedUrl as string)
-          .toArray(),
+          .reverse()
+          .sortBy("id"),
       [feedUrl]
     ) || [];
 
