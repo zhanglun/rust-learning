@@ -18,8 +18,6 @@ const bannerImageList = [
 ];
 
 export const ArticleItem = React.memo((props: any) => {
-  console.log('---< render item');
-
   const { article, onSelect } = props;
   const [readStatus, setReadStatus] = useState(false);
   const [bannerImage, setBannerImage] = useState('');

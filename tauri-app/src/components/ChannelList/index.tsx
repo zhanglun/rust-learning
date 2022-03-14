@@ -12,7 +12,6 @@ import { getFavico, requestFeed } from "../../helpers/parseXML";
 
 const ChannelList = (): JSX.Element => {
   const channelList = useLiveQuery(() => db.channels.toArray(), []);
-
   const navigate = useNavigate();
   const addFeedButtonRef = useRef(null);
   const [currentId, setCurrentId] = useState("");

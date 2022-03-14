@@ -24,17 +24,17 @@ export const parseFeedXML = (
 
       switch (child.nodeName) {
         case "title":
-          res.title = child.textContent;
+          res.title = child.textContent.trim();
           break;
         case "link":
-          res.link = child.textContent;
+          res.link = child.textContent.trim();
           break;
         case "description":
-          res.description = child.textContent;
+          res.description = child.textContent.trim();
           break;
         case "lastBuildDate":
         case "pubDate":
-          res.pubDate = child.textContent;
+          res.pubDate = child.textContent.trim();
           break;
         default:
           break;
@@ -42,10 +42,6 @@ export const parseFeedXML = (
 
       child = child.nextElementSibling;
     }
-
-    console.log("---->", channeldom);
-    console.log("---->", channeldom.querySelector("link"));
-    console.log(res);
 
     return res;
   };
@@ -63,7 +59,7 @@ export const parseFeedXML = (
           break;
         }
 
-        const content = child.textContent;
+        const content = child.textContent.trim();
 
         switch (child.nodeName) {
           case "title":
@@ -92,8 +88,6 @@ export const parseFeedXML = (
 
         child = child.nextElementSibling;
       }
-
-      console.log(feed);
 
       res.push(feed);
     }
