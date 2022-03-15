@@ -80,8 +80,8 @@ export const ImportAndExport = (props: any) => {
       </div>
       <div className={styles.panelBody}>
         <div className={styles.section}>
-          <div className={styles.options}>OPML 导入</div>
-          <div>
+          <p className={styles.options}>OPML 导入</p>
+          <p>
             <label htmlFor="source-file">
               <input
                 type="radio"
@@ -100,7 +100,7 @@ export const ImportAndExport = (props: any) => {
               />
               Text
             </label>
-          </div>
+          </p>
           {sourceType === "file" && (
             <div>
               <span>{file && file.name}</span>

@@ -65,6 +65,7 @@ button {
   border-radius: var(--button-radius);
   border: none;
   outline: none;
+
   cursor: pointer;
 }
 

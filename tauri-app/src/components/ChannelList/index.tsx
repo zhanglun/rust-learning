@@ -1,16 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useLiveQuery } from "dexie-react-hooks";
-import { Icon } from "../Icon";
+import React, {useState, useEffect, useRef} from "react";
+import {NavLink} from "react-router-dom";
+import {useLiveQuery} from "dexie-react-hooks";
+import {Icon} from "../Icon";
 import styles from "./channel.module.css";
 import defaultSiteIcon from "./default.png";
-import { useNavigate } from "react-router-dom";
-import { RouteConfig } from "../../config";
-import { db } from "../../db";
-import { AddFeedChannel } from "../AddFeedChannel";
-import { Toast } from "../Toast";
-import { getFavico, requestFeed } from "../../helpers/parseXML";
+import {useNavigate} from "react-router-dom";
+import {RouteConfig} from "../../config";
+import {db} from "../../db";
+import {AddFeedChannel} from "../AddFeedChannel";
+import {Toast} from "../Toast";
+import {getFavico, requestFeed} from "../../helpers/parseXML";
 
-const ChannelList = (): JSX.Element => {
+const ChannelList = (props: any): JSX.Element => {
   const channelList = useLiveQuery(() => db.channels.toArray(), []);
   const navigate = useNavigate();
   const addFeedButtonRef = useRef(null);
@@ -18,11 +19,12 @@ const ChannelList = (): JSX.Element => {
   const [sum, setSum] = useState(0);
   const [todayUnread, setTodayUnread] = useState(0);
 
-  const initial = () => {};
+  const initial = () => {
+  };
   const loadAndUpdate = (url: string) => {
     return requestFeed(url).then((res) => {
       if (res.channel && res.items) {
-        const { channel, items } = res;
+        const {channel, items} = res;
 
         db.transaction("rw", db.channels, db.articles, async () => {
           db.channels.add(channel);
@@ -84,55 +86,52 @@ const ChannelList = (): JSX.Element => {
     });
   };
 
-  const viewArticles = async (channel: any) => {
-    navigate(
-      `${RouteConfig.CHANNEL.replace(/:name/, channel.title)}?channelId=${
-        channel.id
-      }&feedUrl=${channel.feedUrl}`
-    );
+  const viewInbox = () => {
   };
-
-  const viewInbox = () => {};
 
   const goToSetting = () => {
     navigate(RouteConfig.SETTINGS);
   };
 
-  const viewToday = () => {};
+  const viewToday = () => {
+  };
 
   const renderFeedList = (): JSX.Element => {
     return (
       <ul className={styles.list}>
         {channelList?.map((channel: any, i: number) => {
-          const { articleCount = 0, link } = channel;
+          const {articleCount = 0, link} = channel;
           const ico = getFavico(link);
 
           return (
             <li
-              className={`${styles.item} ${
-                currentId === channel.id ? styles.itemActive : ""
-              }`}
-              // eslint-disable-next-line react/no-array-index-key
               key={channel.title + i}
-              onClick={() => viewArticles(channel)}
               aria-hidden="true"
             >
-              <img
-                src={ico}
-                onError={(e) => {
-                  // @ts-ignore
-                  e.target.onerror = null;
+              <NavLink
+                className={({isActive}) => `${styles.item} ${
+                  isActive ? styles.itemActive : ""
+                }`}
+                to={`${RouteConfig.CHANNEL.replace(/:name/, encodeURI(channel.title))}?channelId=${
+                  channel.id
+                }&feedUrl=${channel.feedUrl}`}>
+                <img
+                  src={ico}
+                  onError={(e) => {
+                    // @ts-ignore
+                    e.target.onerror = null;
 
-                  // @ts-ignore
-                  e.target.src = defaultSiteIcon;
-                }}
-                className={styles.icon}
-                alt={channel.title}
-              />
-              <span className={styles.name}>{channel.title}</span>
-              {articleCount > 0 && (
-                <span className={styles.count}>{articleCount}</span>
-              )}
+                    // @ts-ignore
+                    e.target.src = defaultSiteIcon;
+                  }}
+                  className={styles.icon}
+                  alt={channel.title}
+                />
+                <span className={styles.name}>{channel.title}</span>
+                {articleCount > 0 && (
+                  <span className={styles.count}>{articleCount}</span>
+                )}
+              </NavLink>
             </li>
           );
         })}
@@ -154,9 +153,9 @@ const ChannelList = (): JSX.Element => {
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.toolbar}>
-          <AddFeedChannel Aref={addFeedButtonRef} />
-          <Icon name="add" customClass={styles.toolbarItem} onClick={addFeed} />
-          <Icon name="folder" customClass={styles.toolbarItem} />
+          <AddFeedChannel Aref={addFeedButtonRef}/>
+          <Icon name="add" customClass={styles.toolbarItem} onClick={addFeed}/>
+          <Icon name="folder" customClass={styles.toolbarItem}/>
           <Icon
             name="refresh"
             customClass={styles.toolbarItem}
@@ -203,4 +202,4 @@ const ChannelList = (): JSX.Element => {
   );
 };
 
-export { ChannelList };
+export {ChannelList};
