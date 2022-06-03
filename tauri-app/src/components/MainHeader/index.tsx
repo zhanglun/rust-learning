@@ -5,7 +5,6 @@ import { Toast } from "../Toast";
 import { db, Article as ArticleModel, Article } from "../../db";
 
 import styles from "./header.module.css";
-import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 
 type MainHeaderProps = {
   channelId: string | null;
@@ -21,6 +20,8 @@ export const MainHeader = (props: MainHeaderProps) => {
       requestFeed(feedUrl).then((res) => {
         if (res.channel && res.items) {
           const { items } = res;
+
+          console.log('item', items)
           const links = items.map((item: ArticleModel) => item.link);
 
           db.articles
@@ -34,7 +35,7 @@ export const MainHeader = (props: MainHeaderProps) => {
                 });
 
                 db.transaction("rw", db.articles, async () => {
-                  db.articles.bulkAdd(remotes);
+                  await db.articles.bulkAdd(remotes);
                 }).then(() => {
                   Toast.show({
                     title: "success",

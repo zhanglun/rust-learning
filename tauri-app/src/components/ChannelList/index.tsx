@@ -22,14 +22,21 @@ const ChannelList = (props: any): JSX.Element => {
   const initial = () => {
   };
   const loadAndUpdate = (url: string) => {
-    return requestFeed(url).then((res) => {
+    return requestFeed(url).then(async (res) => {
       if (res.channel && res.items) {
         const {channel, items} = res;
 
-        db.transaction("rw", db.channels, db.articles, async () => {
-          db.channels.add(channel);
-          db.articles.bulkAdd(items);
-        });
+        await db.channels.put(channel);
+        await db.articles.bulkPut(items);
+
+        // db.transaction("rw", db.channels, db.articles, async () => {
+        //   try {
+        //     await db.channels.put(channel, 'feedUrl');
+        //     // db.articles.bulkPut(items);
+        //   } catch(err) {
+        //     console.error(err)
+        //   }
+        // });
       }
 
       return res;

@@ -63,9 +63,6 @@ export const ArticleItem = React.memo((props: any) => {
         <div className={styles.title}>
           <div className={styles.titleText}>{article.title}</div>
         </div>
-        <div className={styles.date}>
-          {Dayjs(article.pubDate).format('YYYY-MM-DD HH:mm')}
-        </div>
       </div>
     </li>
   );
