@@ -7,6 +7,7 @@ export interface Channel {
   feedUrl: string;
   description?: string;
   pubDate?: Date;
+  unread?: Number;
 }
 export interface Article {
   id?: number;
@@ -16,7 +17,7 @@ export interface Article {
   description?: string;
   content?: string;
   pudDate?: Date;
-  unRead: number;
+  unread: number;
 }
 
 export class MySubClassedDexie extends Dexie {
@@ -27,7 +28,7 @@ export class MySubClassedDexie extends Dexie {
     super('salix');
     this.version(1).stores({
       channels: '++id, title, link, &feedUrl, description, pubDate',
-      articles: '++id, title, &link, feedUrl, author, description, content, pubDate, unRead',
+      articles: '++id, title, &link, feedUrl, author, description, content, pubDate, unread',
     });
   }
 }

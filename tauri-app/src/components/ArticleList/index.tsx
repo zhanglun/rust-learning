@@ -29,7 +29,7 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
         db.articles
           .where("feedUrl")
           .equalsIgnoreCase(feedUrl as string)
-          .and((a) => a.unRead === 1)
+          .and((a) => a.unread === 1)
           .reverse()
           .sortBy("id"),
       [feedUrl]
@@ -47,7 +47,7 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
 
   const handleArticleSelect = (article: any) => {
     db.articles.update(article.id, {
-      unRead: 0,
+      unread: 0,
     });
 
     if (props.onArticleSelect) {

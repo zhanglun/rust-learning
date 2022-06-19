@@ -10,6 +10,7 @@ import {db} from "../../db";
 import {AddFeedChannel} from "../AddFeedChannel";
 import {Toast} from "../Toast";
 import {getFavico, requestFeed} from "../../helpers/parseXML";
+import * as dataAgent from '../../helpers/dataAgent';
 
 const ChannelList = (props: any): JSX.Element => {
   const channelList = useLiveQuery(() => db.channels.toArray(), []);
@@ -26,17 +27,10 @@ const ChannelList = (props: any): JSX.Element => {
       if (res.channel && res.items) {
         const {channel, items} = res;
 
-        await db.channels.put(channel);
-        await db.articles.bulkPut(items);
-
-        // db.transaction("rw", db.channels, db.articles, async () => {
-        //   try {
-        //     await db.channels.put(channel, 'feedUrl');
-        //     // db.articles.bulkPut(items);
-        //   } catch(err) {
-        //     console.error(err)
-        //   }
-        // });
+        db.transaction("rw", db.channels, db.articles, async () => {
+          await dataAgent.upsertChannel(channel)
+          await dataAgent.bulkAddArticle(items)
+        });
       }
 
       return res;
@@ -85,11 +79,12 @@ const ChannelList = (props: any): JSX.Element => {
     };
 
     enQueue().then(() => {
+      return Promise.all(res);
+    }).then(() => {
       Toast.show({
         type: "success",
         title: "同步完成",
       });
-      return Promise.all(res);
     });
   };
 

@@ -2,20 +2,20 @@ import { http } from "@tauri-apps/api";
 import { Channel as ChannelModel, Article as ArticleModel } from "../db";
 
 type ChannelRes = Omit<ChannelModel, "feedUrl">;
-type ArticelRes = Omit<ArticleModel, "feedUrl" | "unRead">;
+type ArticleRes = Omit<ArticleModel, "feedUrl" | "unread">;
 
 export const parseFeedXML = (
   xml: string
 ): {
   channel: ChannelRes;
-  items: ArticelRes[];
+  items: ArticleRes[];
 } => {
   const parser = new DOMParser();
   const dom = parser.parseFromString(xml, "application/xml");
 
-  const parseChannel = (channeldom: any) => {
+  const parseChannel = (dom: any) => {
     const res = {} as Omit<ChannelModel, "feedUrl">;
-    let child = channeldom.firstChild;
+    let child = dom.firstChild;
 
     while (true) {
       if (!child) {
@@ -47,7 +47,8 @@ export const parseFeedXML = (
   };
 
   const parseItems = (doc: any) => {
-    const items = doc.querySelectorAll("item");
+    const items = doc.querySelectorAll("item, entry");
+    console.log('items --->', items)
     const res = [];
 
     for (let item of items) {
@@ -96,19 +97,17 @@ export const parseFeedXML = (
   };
 
   let channel = {} as Omit<ChannelModel, "feedUrl">;
-  let items = [] as Omit<ArticleModel, "feedUrl" | "unRead">[];
+  let items = [] as Omit<ArticleModel, "feedUrl" | "unread">[];
 
-  if (dom.querySelector("channel")) {
+  if (dom.querySelector("channel, feed")) {
     channel = {
-      ...parseChannel(dom.querySelector("channel")),
+      ...parseChannel(dom.querySelector("channel, feed")),
     };
   }
 
-  if (dom.querySelector("item")) {
+  if (dom.querySelector("item, entry")) {
     items = parseItems(dom);
   }
-
-  console.log(dom);
 
   return {
     channel,
@@ -117,7 +116,7 @@ export const parseFeedXML = (
 };
 
 export const extendFeedItems = (
-  items: Omit<ArticleModel, "feedUrl" | "unRead">[],
+  items: Omit<ArticleModel, "feedUrl" | "unread">[],
   data: any
 ) => {
   return items.map((item) => {
@@ -152,7 +151,7 @@ export const requestFeed = (
 
         return {
           channel: extendChannel(channel, { feedUrl: url }),
-          items: extendFeedItems(items, { feedUrl: url, unRead: 1 }),
+          items: extendFeedItems(items, { feedUrl: url, unread: 1 }),
         };
       } else {
         console.log("-=--> http request Error", status, data);
