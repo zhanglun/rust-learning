@@ -102,7 +102,9 @@ const ChannelList = (props: any): JSX.Element => {
     return (
       <ul className={styles.list}>
         {channelList?.map((channel: any, i: number) => {
-          const {articleCount = 0, link} = channel;
+          console.log('channle', channel)
+
+          const {unread = 0, link} = channel;
           const ico = getFavico(link);
 
           return (
@@ -130,8 +132,8 @@ const ChannelList = (props: any): JSX.Element => {
                   alt={channel.title}
                 />
                 <span className={styles.name}>{channel.title}</span>
-                {articleCount > 0 && (
-                  <span className={styles.count}>{articleCount}</span>
+                {unread > 0 && (
+                  <span className={styles.count}>{unread}</span>
                 )}
               </NavLink>
             </li>

@@ -1,7 +1,7 @@
 import React, {useImperativeHandle, useState} from "react";
 import {Modal} from "../Modal";
 import {useModal} from "../Modal/useModal";
-import {db, Channel as ChannelModel, Article as ArticleModel} from "../../db";
+import {db, Channel as ChannelModel, Article as ArticleModel, Article} from "../../db";
 import {requestFeed} from "../../helpers/parseXML";
 import * as dataAgent from '../../helpers/dataAgent';
 import styles from "./index.module.css";
@@ -27,6 +27,8 @@ export const AddFeedChannel = (props: any) => {
       if (res.channel && res.items) {
         const {channel, items} = res;
 
+        items.forEach((item: Article) => item.unread = 1)
+
         setTitle(channel.title);
         setChannel(channel);
         setArticles(items);
@@ -49,7 +51,7 @@ export const AddFeedChannel = (props: any) => {
   const handleSave = () => {
     db.transaction("rw", db.channels, db.articles, async () => {
       await dataAgent.upsertChannel({...channel, unread: 0})
-      await dataAgent.bulkAddArticle(articles)
+      // await dataAgent.bulkAddArticle(articles)
     }).then(() => {
       toggleModal();
     });

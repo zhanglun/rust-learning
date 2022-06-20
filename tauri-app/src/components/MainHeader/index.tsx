@@ -2,7 +2,6 @@ import React from "react";
 import { Icon } from "../Icon";
 import { requestFeed } from "../../helpers/parseXML";
 import { Toast } from "../Toast";
-
 import styles from "./header.module.css";
 import * as dataAgent from "../../helpers/dataAgent";
 
@@ -20,7 +19,11 @@ export const MainHeader = (props: MainHeaderProps) => {
       requestFeed(feedUrl).then((res) => {
         if (res.channel && res.items) {
           const { items } = res;
-          dataAgent.bulkAddArticle(items).then(() => {
+          dataAgent.bulkAddArticle(items)
+            .then(() => {
+              return dataAgent.updateCountWithChannel(feedUrl)
+            })
+            .then(() => {
             Toast.show({
               title: "success",
               content: "Sync Success!",

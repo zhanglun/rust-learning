@@ -34,14 +34,13 @@ export const bulkAddArticle = (articles: ArticleModel[]) => {
  */
 export const upsertChannel = async (channel: Channel) => {
   if (await db.channels.get({ feedUrl: channel.feedUrl })) {
-    return db.channels.update(channel.feedUrl, channel);
+    return db.channels.where('feedUrl').equals(channel.feedUrl).modify(channel);
   } else {
     return db.channels.put(channel);
   }
 }
 
-export const updateCountWithChannel = async (channel: Channel) => {
-  const { feedUrl } = channel
+export const updateCountWithChannel = async (feedUrl: string): Promise<any> => {
   const c = await db.channels.get({ feedUrl })
 
   if (c) {
@@ -50,7 +49,7 @@ export const updateCountWithChannel = async (channel: Channel) => {
       unread: 1
     }).count()
 
-    console.log('unread', unread)
+    await db.channels.where('feedUrl').equals(feedUrl).modify({ unread });
 
     return { feedUrl: unread }
   }
