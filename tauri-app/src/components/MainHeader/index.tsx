@@ -19,6 +19,7 @@ export const MainHeader = (props: MainHeaderProps) => {
       requestFeed(feedUrl).then((res) => {
         if (res.channel && res.items) {
           const { items } = res;
+          console.log(';=-====>2222', items)
           dataAgent.bulkAddArticle(items)
             .then(() => {
               return dataAgent.updateCountWithChannel(feedUrl)

@@ -46,7 +46,6 @@ export const ArticleItem = React.memo((props: any) => {
   useEffect(() => {
     setBannerImage(parseBannerImage(article.content));
     setReadStatus(article.unread === 0);
-    console.log(article);
   }, [article]);
 
   return (

@@ -11,6 +11,7 @@ import {AddFeedChannel} from "../AddFeedChannel";
 import {Toast} from "../Toast";
 import {getFavico, requestFeed} from "../../helpers/parseXML";
 import * as dataAgent from '../../helpers/dataAgent';
+import {updateCountWithChannel} from "../../helpers/dataAgent";
 
 const ChannelList = (props: any): JSX.Element => {
   const channelList = useLiveQuery(() => db.channels.toArray(), []);
@@ -28,8 +29,9 @@ const ChannelList = (props: any): JSX.Element => {
         const {channel, items} = res;
 
         db.transaction("rw", db.channels, db.articles, async () => {
-          await dataAgent.upsertChannel(channel)
           await dataAgent.bulkAddArticle(items)
+          await dataAgent.upsertChannel(channel)
+          await dataAgent.updateCountWithChannel(channel.feedUrl)
         });
       }
 

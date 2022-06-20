@@ -10,7 +10,7 @@ export const bulkAddArticle = (articles: ArticleModel[]) => {
   return db.articles.where("link")
     .anyOf(links)
     .toArray()
-    .then((exists) => {
+    .then((exists): Promise<any> => {
       if (exists.length < articles.length) {
         const remotes = articles.filter((item: Article) => {
           return !exists.some((exist) => exist.link === item.link);
@@ -18,9 +18,7 @@ export const bulkAddArticle = (articles: ArticleModel[]) => {
 
         if (remotes.length) {
           console.log('remotes', remotes);
-          return db.transaction("rw", db.articles, async () => {
-            await db.articles.bulkAdd(remotes);
-          })
+          return db.articles.bulkAdd(remotes);
         }
       }
 
@@ -48,6 +46,8 @@ export const updateCountWithChannel = async (feedUrl: string): Promise<any> => {
       feedUrl,
       unread: 1
     }).count()
+
+    console.log('unread', unread)
 
     await db.channels.where('feedUrl').equals(feedUrl).modify({ unread });
 
