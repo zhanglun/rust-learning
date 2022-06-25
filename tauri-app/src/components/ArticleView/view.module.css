@@ -6,7 +6,6 @@
   grid-template-rows: calc(
   100% - var(--app-toolbar-height)
   );
-  background-color: #fafafa;
   /* grid-template-columns: 1fr var(--view-helpbar-width); */
 }
 
@@ -26,7 +25,6 @@
   padding: 0 120px;
   margin: 0 auto;
   position: relative;
-  background-color: #fafafa;
 }
 
 .meta {
@@ -102,7 +100,6 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background-color: #fafafa;
 }
 
 .active {
@@ -113,7 +110,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 6px;
   width: 48px;
   height: 48px;
   line-height: 49px;
@@ -135,7 +131,6 @@
   max-width: 100% !important;
   height: auto;
   margin: 10px auto;
-  background-color: #fafafa;
 }
 
 /* 文章样式 */
@@ -145,12 +140,12 @@ blockquote {
 }
 
 .title {
-  font-family: var(--sans-font);
+  /*font-family: var(--sans-font);*/
   font-size: calc(var(--content-font-size) * 1.8);
 }
 
 .desc {
-  font-family: var(--sans-font);
+  /*font-family: var(--sans-font);*/
   font-size: calc(var(--content-font-size) * 1.2);
 }
 

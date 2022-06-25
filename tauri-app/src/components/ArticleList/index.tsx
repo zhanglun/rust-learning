@@ -29,7 +29,7 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
         db.articles
           .where("feedUrl")
           .equalsIgnoreCase(feedUrl as string)
-          .and((a) => a.unread === 1)
+          // .and((a) => a.unread === 1)
           .reverse()
           .sortBy("id"),
       [feedUrl]
@@ -46,6 +46,7 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
   };
 
   const handleArticleSelect = (article: any) => {
+    console.log(article);
     db.articles.update(article.id, {
       unread: 0,
     });
@@ -56,6 +57,7 @@ export const ArticleList = (props: ArticleListProps): JSX.Element => {
   };
 
   const renderList = (): JSX.Element[] => {
+    console.log('articleList', articleList)
     return articleList.map((article: any, idx: number) => {
       return (
         <ArticleItem

@@ -33,6 +33,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  padding: 0 14px;
 }
 
 .menuIcon {
@@ -42,10 +43,11 @@
   width: 34px;
   height: 34px;
   line-height: 34px;
-  font-size: 18px;
+  font-size: 20px;
   color: var(--title-color);
   border-radius: var(--button-radius);
   cursor: pointer;
+  margin-left: 10px;
 }
 
 .menuIcon:hover {

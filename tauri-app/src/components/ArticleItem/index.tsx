@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// @ts-ignores
-import Dayjs from 'dayjs';
 import styles from './articleitem.module.css';
 
 import bannerImage1 from './images/pattern-1.png';

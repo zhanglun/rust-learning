@@ -104,8 +104,6 @@ const ChannelList = (props: any): JSX.Element => {
     return (
       <ul className={styles.list}>
         {channelList?.map((channel: any, i: number) => {
-          console.log('channle', channel)
-
           const {unread = 0, link} = channel;
           const ico = getFavico(link);
 
@@ -176,32 +174,32 @@ const ChannelList = (props: any): JSX.Element => {
         </div>
       </div>
       <div className={styles.inner}>
-        <div className={styles.official}>
-          <div
-            className={styles.officialItem}
-            aria-hidden="true"
-            onClick={() => viewInbox()}
-          >
-            <Icon
-              customClass={`${styles.officialItemIcon} ${styles.iconUnread}`}
-              name="inbox"
-            />
-            <span className={styles.name}>所有文章</span>
-            <span className={styles.count}>{sum}</span>
-          </div>
-          <div
-            className={styles.officialItem}
-            aria-hidden="true"
-            onClick={() => viewToday()}
-          >
-            <Icon
-              customClass={`${styles.officialItemIcon} ${styles.iconToday}`}
-              name="calendar_today"
-            />
-            <span className={styles.name}>今日未读</span>
-            <span className={styles.count}>{todayUnread}</span>
-          </div>
-        </div>
+        {/*<div className={styles.official}>*/}
+        {/*  <div*/}
+        {/*    className={styles.officialItem}*/}
+        {/*    aria-hidden="true"*/}
+        {/*    onClick={() => viewInbox()}*/}
+        {/*  >*/}
+        {/*    <Icon*/}
+        {/*      customClass={`${styles.officialItemIcon} ${styles.iconUnread}`}*/}
+        {/*      name="inbox"*/}
+        {/*    />*/}
+        {/*    <span className={styles.name}>所有文章</span>*/}
+        {/*    <span className={styles.count}>{sum}</span>*/}
+        {/*  </div>*/}
+        {/*  <div*/}
+        {/*    className={styles.officialItem}*/}
+        {/*    aria-hidden="true"*/}
+        {/*    onClick={() => viewToday()}*/}
+        {/*  >*/}
+        {/*    <Icon*/}
+        {/*      customClass={`${styles.officialItemIcon} ${styles.iconToday}`}*/}
+        {/*      name="calendar_today"*/}
+        {/*    />*/}
+        {/*    <span className={styles.name}>今日未读</span>*/}
+        {/*    <span className={styles.count}>{todayUnread}</span>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
         {renderFeedList()}
       </div>
     </div>
