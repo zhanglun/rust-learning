@@ -19,14 +19,13 @@ export const ArticleItem = React.memo((props: any) => {
   const { article, onSelect } = props;
   const [readStatus, setReadStatus] = useState(false);
   const [bannerImage, setBannerImage] = useState('');
-
-  const markAsRead = () => {
-  };
+  const [check, setCheck] = useState(false);
 
   const handleClick = (e: any) => {
     if(onSelect) {
       onSelect(article);
     }
+    setCheck(true)
   };
 
   const parseBannerImage = (content: string): string => {
@@ -48,7 +47,7 @@ export const ArticleItem = React.memo((props: any) => {
 
   return (
     <li
-      className={`${styles.item} ${readStatus && styles.read}`}
+      className={`${styles.item} ${readStatus && styles.read} ${check && styles.current}`}
       onClick={handleClick}
       aria-hidden="true"
     >

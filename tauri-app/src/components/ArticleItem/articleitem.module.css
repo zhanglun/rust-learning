@@ -1,11 +1,11 @@
 .item {
   box-sizing: border-box;
   position: relative;
-  padding: 8px 4px 8px 8px;
-  height: 76px;
+  padding: 12px 8px 12px 12px;
+  margin: 8px 0;
   list-style-type: none;
   background: #ffffff;
-  border-bottom: 1px solid #e6e6e6;
+  border-radius: 4px;
 }
 
 .item:hover {
@@ -99,15 +99,15 @@
   color: var(--text-color);
 }
 
-.current {
-  background-color: var(--color-primary-blue);
-  color: var(--color-primary-white);
-}
+/*.current {*/
+/*  background-color: var(--color-primary-blue);*/
+/*  color: var(--color-primary-white);*/
+/*}*/
 
-.current .title,
-.current .pubTime {
-  color: var(--color-primary-white);
-}
+/*.current .title,*/
+/*.current .pubTime {*/
+/*  color: var(--color-primary-white);*/
+/*}*/
 
 .meta {
   display: flex;
