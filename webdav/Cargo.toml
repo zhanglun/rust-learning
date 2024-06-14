@@ -6,3 +6,4 @@ edition = "2021"
 [dependencies]
 tokio = { version = "1", features = ["full"] }
 reqwest = { version = "0.11", features = ["json", "socks"] }
+quick-xml = { version = "0.32", features = ["overlapped-lists", "serialize"] }

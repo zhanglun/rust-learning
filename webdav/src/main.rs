@@ -1,5 +1,6 @@
-use reqwest::{Client, Method};
 use std::env;
+
+use webdav::client::Client;
 
 async fn connect_server() {
     let args: Vec<String> = env::args().collect();
@@ -10,34 +11,15 @@ async fn connect_server() {
 
     println!("password{:?}", password);
 
-    // 创建HTTP客户端
-    let client = Client::new()
-        .request(Method::from_bytes(b"PROPFIND").unwrap(), url)
-        .basic_auth(username, Some(password));
-    // .send()
-    // .await;
+    let client = Client::init(&username, password);
 
-    println!("client{:?}", client);
+    let list_result = client.list(url, "1").await;
+    let list = match list_result {
+        Ok(l) => l,
+        Err(error) => panic!("Problem creating the file: {error:?}")
+    };
 
-    let body = r#"<?xml version="1.0" encoding="utf-8" ?>
-    <D:propfind xmlns:D="DAV:">
-        <D:allprop/>
-    </D:propfind>
-"#;
-
-    let result = Client::new()
-        .request(Method::from_bytes(b"PROPFIND").unwrap(), url)
-        .basic_auth(username, Some(password))
-        .body(body)
-        .send()
-        .await
-        .unwrap();
-
-    println!("result ===> {:?}", result.text().await);
-    // let res = match result {
-    //   Ok(data) => data,
-    //   Err(error) => error.to_string(),
-    // };
+    println!("list {:?}", list);
 }
 
 #[tokio::main]
